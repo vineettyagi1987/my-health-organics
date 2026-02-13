@@ -9,6 +9,10 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+     const ROLE_ADMIN = 'admin';
+    const ROLE_EMPLOYEE = 'employee';
+    const ROLE_DISTRIBUTOR = 'distributor';
+    const ROLE_CUSTOMER = 'customer';
     use HasFactory, Notifiable;
 
     /**
@@ -19,7 +23,16 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'status',
+        'my_referral_code',
+        'referral_code',
         'password',
+        'role',
+        'department',
+        'company_title',
+        'region_area',
+        'commission_rate',
     ];
 
     /**
@@ -44,4 +57,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isAdmin()
+{
+    return $this->role === self::ROLE_ADMIN;
+}
+
+public function isEmployee()
+{
+    return $this->role === self::ROLE_EMPLOYEE;
+}
+
+public function isDistributor()
+{
+    return $this->role === self::ROLE_DISTRIBUTOR;
+}
+
+public function isCustomer()
+{
+    return $this->role === self::ROLE_CUSTOMER;
+}
+
 }

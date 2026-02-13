@@ -1,0 +1,114 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+class EmployeeController extends Controller
+{
+    /**
+     * Display a listing of employees.
+     */
+    public function index()
+    {
+        $employees = User::where('role', User::ROLE_EMPLOYEE)
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.employees.index', compact('employees'));
+    }
+
+    /**
+     * Show the form for creating a new employee.
+     */
+    public function create()
+    {
+        return view('admin.employees.create');
+    }
+
+    /**
+     * Store a newly created employee.
+     */
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone'    => ['required', 'string', 'max:20'],
+            'password' => ['required', 'string', 'min:6'],
+            'status'   => ['required', 'boolean'],
+             'department'    => ['nullable','string','max:255'],
+             'company_title' => ['nullable','string','max:255'],
+        ]);
+
+        $data['password'] = Hash::make($data['password']);
+        $data['role']     = User::ROLE_EMPLOYEE;
+
+        User::create($data);
+
+        return redirect()
+            ->route('admin.employees.index')
+            ->with('success', 'Employee created successfully.');
+    }
+
+    /**
+     * Show the form for editing the specified employee.
+     */
+    public function edit($id)
+    {
+        $employee = User::where('role', User::ROLE_EMPLOYEE)
+            ->findOrFail($id);
+
+        return view('admin.employees.edit', compact('employee'));
+    }
+
+    /**
+     * Update the specified employee.
+     */
+    public function update(Request $request, $id)
+    {
+        $employee = User::where('role', User::ROLE_EMPLOYEE)
+            ->findOrFail($id);
+
+        $data = $request->validate([
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'max:255', 'unique:users,email,' . $employee->id],
+            'phone'    => ['required', 'string', 'max:20'],
+            'password' => ['nullable', 'string', 'min:6'],
+            'status'   => ['required', 'boolean'],
+              'department'    => ['nullable','string','max:255'],
+            'company_title' => ['nullable','string','max:255'],
+        ]);
+
+        // Update password only if provided
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        $employee->update($data);
+
+        return redirect()
+            ->route('admin.employees.index')
+            ->with('success', 'Employee updated successfully.');
+    }
+
+    /**
+     * Remove the specified employee.
+     */
+    public function destroy($id)
+    {
+        $employee = User::where('role', User::ROLE_EMPLOYEE)
+            ->findOrFail($id);
+
+        $employee->delete();
+
+        return redirect()
+            ->route('admin.employees.index')
+            ->with('success', 'Employee deleted successfully.');
+    }
+}
