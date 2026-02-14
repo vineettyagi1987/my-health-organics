@@ -33,6 +33,8 @@ class User extends Authenticatable
         'company_title',
         'region_area',
         'commission_rate',
+          'emp_id',
+         'dist_id',
     ];
 
     /**
@@ -77,5 +79,25 @@ public function isCustomer()
 {
     return $this->role === self::ROLE_CUSTOMER;
 }
+protected static function booted()
+{
+    static::creating(function ($user) {
+
+        // Employee ID
+        if ($user->role === self::ROLE_EMPLOYEE && empty($user->emp_id)) {
+            $nextId = self::where('role', self::ROLE_EMPLOYEE)->max('id') + 1;
+            $user->emp_id = 'EMP-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+        }
+
+        // Distributor ID
+        if ($user->role === self::ROLE_DISTRIBUTOR && empty($user->dist_id)) {
+            $nextId = self::where('role', self::ROLE_DISTRIBUTOR)->max('id') + 1;
+            $user->dist_id = 'DIST-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+        }
+    });
+}
+
 
 }
+
+

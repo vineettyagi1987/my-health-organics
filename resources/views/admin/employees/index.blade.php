@@ -25,6 +25,7 @@
 <th>Phone</th>
 <th>Department</th>
 <th>Company Role/Title</th>
+<th>Employee ID</th>
 <th>Status</th>
 <th width="150">Action</th>
 </tr>
@@ -37,6 +38,7 @@
     <td>{{ $employee->phone }}</td>
     <td>{{ $employee->department }}</td>
     <td>{{ $employee->company_title }}</td>
+    <td>{{ $employee->emp_id }}</td>
     <td>
         <span class="badge bg-{{ $employee->status ? 'success' : 'danger' }}">
             {{ $employee->status ? 'Active' : 'Inactive' }}

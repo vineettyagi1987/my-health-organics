@@ -21,6 +21,7 @@
             <th>Phone</th>
             <th>Region / Area</th>
             <th>Commission %</th>
+            <th>Distributor ID</th>
             <th>Status</th>
             <th width="150">Action</th>
         </tr>
@@ -35,6 +36,7 @@
             <td>{{ $d->region_area }}</td>
 <td>{{ $d->commission_rate }}%</td>
 
+            <td>{{ $d->dist_id }}</td>
             <td>
                 <span class="badge bg-{{ $d->status ? 'success':'danger' }}">
                     {{ $d->status ? 'Active':'Inactive' }}

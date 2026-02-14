@@ -76,7 +76,9 @@ $data['slug'] = Str::slug($data['name']);
 
 
 if ($request->hasFile('image')) {
-Storage::disk('public')->delete($product->image);
+if (!empty($product->image) && Storage::disk('public')->exists($product->image)) {
+    Storage::disk('public')->delete($product->image);
+}
 $data['image'] = $request->file('image')->store('products','public');
 }
 

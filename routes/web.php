@@ -15,7 +15,8 @@ use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Customer\OrderController;
-Route::get('/', [HomeController::class, 'index'])->name('home');
+use App\Http\Controllers\PageController;
+// Route::get('/', [HomeController::class, 'index'])->name('home');
 /*
 |--------------------------------------------------------------------------
 | Auth Routes
@@ -76,3 +77,14 @@ Route::prefix('customer')
         Route::post('/order', [OrderController::class, 'store'])
             ->name('order.store');
     });
+
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/products-projects', [PageController::class, 'products'])->name('products');
+Route::get('/events', [PageController::class, 'events'])->name('events');
+Route::get('/guidance-counselling', [PageController::class, 'guidance'])->name('guidance');
+Route::get('/yoga-ayurved', [PageController::class, 'yoga'])->name('yoga');
+Route::get('/member-benefits', [PageController::class, 'benefits'])->name('benefits');
+Route::get('/media-gallery', [PageController::class, 'gallery'])->name('gallery');
+Route::get('/career', [PageController::class, 'career'])->name('career');
+
+    
