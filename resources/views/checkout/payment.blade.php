@@ -4,7 +4,6 @@
 <div class="container py-5 text-center">
     <h3>Redirecting to Razorpay...</h3>
 </div>
-
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     var options = {
@@ -14,7 +13,9 @@
         name: "My Store",
         description: "Order Payment",
         order_id: "{{ $order->razorpay_order_id }}",
-        handler: function (response){
+
+        /** ✅ SUCCESS */
+        handler: function (response) {
             fetch("/razorpay/payment", {
                 method: "POST",
                 headers: {
@@ -22,11 +23,28 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 body: JSON.stringify(response)
-            }).then(() => window.location.href = "/orders/{{ $order->id }}");
+            })
+            .then(() => {
+                window.location.href = "/orders/{{ $order->id }}";
+            });
+        },
+
+        /** ❌ PAYMENT FAILED */
+        modal: {
+            ondismiss: function () {
+                window.location.href = "/orders/{{ $order->id }}?status=cancelled";
+            }
         }
     };
 
     var rzp = new Razorpay(options);
+
+    /** ❌ Razorpay failure event */
+    rzp.on('payment.failed', function () {
+       // window.location.href = "/orders/{{ $order->id }}?status=failed";
+    });
+
     rzp.open();
 </script>
+
 @endsection

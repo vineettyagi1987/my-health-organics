@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Str;
+use Illuminate\Http\Request;
 class RegisterController extends Controller
 {
     /*
@@ -73,5 +74,11 @@ class RegisterController extends Controller
             'my_referral_code' => strtoupper(Str::random(8)),
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        // After successful registration → go to membership page
+        return redirect()->route('membership.offer');
     }
 }

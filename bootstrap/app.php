@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\TrackVisit::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+    'razorpay/webhook',
+]);
     })
 
     /** ✅ ADD THIS BLOCK FOR EVENTS (Laravel 11) */

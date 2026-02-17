@@ -9,9 +9,18 @@ use Razorpay\Api\Api;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::where('user_id',auth()->id())->latest()->get();
+        // $orders = Order::where('user_id',auth()->id())->latest()->get();
+        // return view('orders.index', compact('orders'));
+        $query = Order::where('user_id', auth()->id());
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $orders = $query->latest()->get();
+
         return view('orders.index', compact('orders'));
     }
 

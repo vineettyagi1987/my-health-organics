@@ -24,7 +24,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->string('razorpay_subscription_id');
-            $table->string('status')->default('active');
+            $table->string('status')->default('created');
 
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();

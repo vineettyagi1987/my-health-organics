@@ -249,7 +249,7 @@ $topProducts = DB::table('order_items')
     ->whereYear('order_items.created_at', now()->year)
     ->groupBy('products.id', 'products.name')
     ->orderByDesc('units_sold')
-    ->limit(5)
+    ->limit(20)
     ->get();
 
 // Labels & data for chart

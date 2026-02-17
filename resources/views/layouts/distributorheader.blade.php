@@ -57,15 +57,42 @@
             {{ auth()->user()->name }} ({{ auth()->user()->role }})
         </a>
 
-        <ul class="dropdown-menu">
-            <li>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="dropdown-item">
-                        Logout
-                    </button>
-                </form>
-            </li>
+      <ul class="dropdown-menu dropdown-menu-end">
+
+        {{-- Orders --}}
+        <li>
+            <a class="dropdown-item" href="{{ route('orders.index') }}">
+                My Orders
+            </a>
+        </li>
+
+        {{-- Refunds (same orders page filtered) --}}
+        <li>
+            <a class="dropdown-item" href="{{ route('orders.index') }}?status=refunded">
+                My Refunds
+            </a>
+        </li>
+
+        {{-- Cancelled Orders --}}
+        <li>
+            <a class="dropdown-item" href="{{ route('orders.index') }}?status=cancelled">
+                Cancelled Orders
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        {{-- Logout --}}
+        <li>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="dropdown-item text-danger">
+                    Logout
+                </button>
+            </form>
+        </li>
+
+    </ul>
         </ul>
     </div>
 @endauth

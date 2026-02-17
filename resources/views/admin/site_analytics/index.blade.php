@@ -45,7 +45,7 @@
          <div class="col-md-6">
          <div class="card">
         <div class="card-body">
-            <h6>MLM Network Growth</h6>
+            <h6>Network Growth</h6>
             <p class="text-muted">
                 Monthly new distributors and total network size.
             </p>
@@ -58,7 +58,7 @@
     <div class="card">
         <div class="card-body">
             <h6>Top Selling Products</h6>
-            <p class="text-muted">Units sold for top 5 products this month.</p>
+            <p class="text-muted">Units sold for top 20 products this month.</p>
 
             <canvas id="topProductsChart" height="90"></canvas>
         </div>

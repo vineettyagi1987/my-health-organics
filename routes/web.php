@@ -14,11 +14,15 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
-use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\ProductController as FrontendProductController;
 
 // Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -67,6 +71,14 @@ Route::prefix('admin')
         Route::resource('faq', FaqController::class);
         Route::resource('employees', EmployeeController::class);
         Route::resource('distributors', DistributorController::class);
+        /** Orders */
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
+
+        /** Subscriptions */
+        Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::get('/subscriptions/{id}', [AdminSubscriptionController::class, 'show'])->name('subscriptions.show');
+        Route::post('/subscriptions/{id}/cancel', [AdminSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
 
     });
 
@@ -115,10 +127,37 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
     Route::post('/orders/{id}/refund', [OrderController::class, 'refund'])->name('orders.refund');
+
+    //  Route::get('/subscriptions', [SubscriptionController::class, 'index'])
+    //     ->name('subscriptions.index');
+
+   
+    // User Registration subscriptions
+
+     Route::get('/membership-offer', [SubscriptionController::class, 'offer'])
+        ->name('membership.offer');
+
+    Route::post('/membership-subscribe', [SubscriptionController::class, 'subscribe'])
+        ->name('membership.subscribe');
+
+    Route::post('/membership-skip', [SubscriptionController::class, 'skip'])
+        ->name('membership.skip');
+
+    //  profile subscriptions
+
+    Route::get('/my-subscription', [SubscriptionController::class, 'profile'])
+        ->name('subscription.profile');
+
+    Route::post('/my-subscription/create', [SubscriptionController::class, 'create'])
+        ->name('subscription.create');
+
+    Route::post('/my-subscription/cancel/{id}', [SubscriptionController::class, 'cancel'])
+        ->name('subscription.cancel');
+        
 });
 
 Route::post('/razorpay/payment', [RazorpayController::class, 'payment']);
 Route::post('/razorpay/webhook', [RazorpayController::class, 'webhook']);
 
-Route::post('/subscribe', [SubscriptionController::class, 'store']);
+//Route::post('/subscribe', [SubscriptionController::class, 'store']);
 
