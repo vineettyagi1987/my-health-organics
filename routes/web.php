@@ -23,6 +23,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\RazorpayController;
+use App\Http\Controllers\DashboardController as UserDashboardController;
+
+
 use App\Http\Controllers\ProductController as FrontendProductController;
 
 // Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -92,11 +95,12 @@ Route::prefix('customer')
     ->name('customer.')
     ->group(function () {
 
-        Route::get('/dashboard', [CustomerDashboardController::class, 'index'])
-            ->name('dashboard');
+        // Route::get('/dashboard', [CustomerDashboardController::class, 'index'])
+        //     ->name('dashboard');
 
-        Route::post('/order', [OrderController::class, 'store'])
-            ->name('order.store');
+        // Route::post('/order', [OrderController::class, 'store'])
+        //     ->name('order.store');
+       
     });
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -153,6 +157,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/my-subscription/cancel/{id}', [SubscriptionController::class, 'cancel'])
         ->name('subscription.cancel');
+
+
+     Route::get('/profile', [UserDashboardController::class, 'profile'])
+            ->name('profile');
+
+        Route::post('/profile/update', [UserDashboardController::class, 'updateProfile'])
+            ->name('profile.update');
         
 });
 

@@ -6,7 +6,19 @@
 
     <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
     <p><strong>Status:</strong> {{ ucfirst($order->status) }}</p>
-
+        <!-- Customer Details -->
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Customer Information</div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{ $order->name }}</p>
+            <p><strong>Phone:</strong> {{ $order->phone }}</p>
+            <p><strong>Email:</strong> {{ $order->email }}</p>
+            <p><strong>Address:</strong> {{ $order->address }}</p>
+            <p><strong>City:</strong> {{ $order->city }}</p>
+            <p><strong>State:</strong> {{ $order->state }}</p>
+            <p><strong>Pincode:</strong> {{ $order->pincode }}</p>
+        </div>
+    </div>
     <table class="table table-bordered">
         <thead>
             <tr>

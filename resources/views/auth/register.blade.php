@@ -83,11 +83,11 @@
                                 Referral Code
                             </label>
 
-                            <div class="col-md-6">
+                           <div class="col-md-6">
                                 <input id="referral_code" type="text"
                                     class="form-control @error('referral_code') is-invalid @enderror"
                                     name="referral_code"
-                                    value="{{ old('referral_code') }}" required>
+                                    value="{{ old('referral_code', request('ref')) }}" required>
 
                                 @error('referral_code')
                                     <span class="invalid-feedback">
@@ -95,6 +95,7 @@
                                     </span>
                                 @enderror
                             </div>
+
                         </div>
 
                         <div class="row mb-0">

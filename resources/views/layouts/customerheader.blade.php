@@ -69,7 +69,9 @@
         </ul> -->
 
           <ul class="dropdown-menu dropdown-menu-end">
-
+        <li>
+            <a class="dropdown-item" href="{{ route('profile') }}">My Profile</a>
+        </li>
         {{-- Orders --}}
         <li>
             <a class="dropdown-item" href="{{ route('orders.index') }}">

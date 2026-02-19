@@ -37,6 +37,7 @@ class SubscriptionController extends Controller
             $rzpSub = $api->subscription->fetch($subscription->razorpay_subscription_id);
            
             if ($rzpSub['status'] === 'active') {
+              
                 $rzpSub->cancel();
             }
 
