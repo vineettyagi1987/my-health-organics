@@ -58,6 +58,13 @@
                <i class="bi bi-briefcase me-2"></i> Career
             </a>
         </li>
+        
 
+         <li class="nav-item">
+            <a class="nav-link {{ Route::is('contact') ? 'active fw-bold text-success' : '' }}"
+               href="{{ route('contact') }}">
+               <i class="bi bi-envelope me-2"></i> Contact Us
+            </a>
+        </li>
     </ul>
 </div>

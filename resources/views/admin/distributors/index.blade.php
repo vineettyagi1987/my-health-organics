@@ -12,6 +12,31 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+    <div class="row mb-3">
+    <div class="col-md-6">
+        <form method="GET" action="{{ route('admin.distributors.index') }}">
+            <div class="d-flex gap-2">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control"
+                    placeholder="Search by name, email, phone, dist ID..."
+                    value="{{ request('search') }}"
+                >
+
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+
+                @if(request('search'))
+                    <a href="{{ route('admin.distributors.index') }}" class="btn btn-secondary">
+                        Reset
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
 
     <table class="table table-bordered">
     <thead>
@@ -53,7 +78,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="5" class="text-center text-muted">No distributors found.</td>
+            <td colspan="8" class="text-center text-muted">No distributors found.</td>
         </tr>
         @endforelse
     </tbody>

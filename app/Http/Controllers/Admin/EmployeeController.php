@@ -12,13 +12,29 @@ class EmployeeController extends Controller
     /**
      * Display a listing of employees.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = User::where('role', User::ROLE_EMPLOYEE)
-            ->latest()
-            ->paginate(10);
+        $query = User::where('role', User::ROLE_EMPLOYEE);
 
-        return view('admin.employees.index', compact('employees'));
+    // Apply search if provided
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('email', 'like', "%$search%")
+              ->orWhere('phone', 'like', "%$search%")
+              ->orWhere('emp_id', 'like', "%$search%")
+              ->orWhere('department', 'like', "%$search%")
+              ->orWhere('company_title', 'like', "%$search%");
+        });
+    }
+
+    $employees = $query->latest()
+        ->paginate(10)
+        ->withQueryString(); // keeps search during pagination
+
+    return view('admin.employees.index', compact('employees'));
     }
 
     /**

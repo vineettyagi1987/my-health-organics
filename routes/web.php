@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\TermController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\DistributorController;
+use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\RazorpayController;
+use App\Http\Controllers\ContactController;
+
 use App\Http\Controllers\DashboardController as UserDashboardController;
 
 
@@ -60,11 +63,11 @@ Route::prefix('admin')
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
        
-             Route::get('/network', [AdminDashboardController::class, 'network'])
+        Route::get('/network', [AdminDashboardController::class, 'network'])
             ->name('network');
-            Route::get('site-analytics', [AdminDashboardController::class, 'siteAnalytics'])
+        Route::get('site-analytics', [AdminDashboardController::class, 'siteAnalytics'])
                 ->name('site.analytics');
-               Route::get('/settings', [AdminDashboardController::class, 'settings'])
+        Route::get('/settings', [AdminDashboardController::class, 'settings'])
             ->name('settings');
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
@@ -82,6 +85,8 @@ Route::prefix('admin')
         Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
         Route::get('/subscriptions/{id}', [AdminSubscriptionController::class, 'show'])->name('subscriptions.show');
         Route::post('/subscriptions/{id}/cancel', [AdminSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+        Route::get('/career', [CareerController::class, 'index'])->name('career.index');
+         Route::post('/career', [CareerController::class, 'store'])->name('career.store');
 
     });
 
@@ -111,6 +116,7 @@ Route::get('/yoga-ayurved', [PageController::class, 'yoga'])->name('yoga');
 Route::get('/member-benefits', [PageController::class, 'benefits'])->name('benefits');
 Route::get('/media-gallery', [PageController::class, 'gallery'])->name('gallery');
 Route::get('/career', [PageController::class, 'career'])->name('career');
+Route::post('/career/contact', [PageController::class, 'store'])->name('career.contact');
 
 //
 
@@ -122,6 +128,9 @@ Route::post('/cart/add', [CartController::class, 'add']);
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart/update', [CartController::class, 'update']);
 Route::post('/cart/remove', [CartController::class, 'remove']);
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

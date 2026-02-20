@@ -3,6 +3,31 @@
 @section('content')
 <div class="container py-4">
     <h2>All Orders</h2>
+    <div class="row mb-3">
+    <div class="col-md-6">
+        <form method="GET" action="{{ route('admin.orders.index') }}">
+            <div class="d-flex gap-2">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control"
+                    placeholder="Search by user, email, order no, status..."
+                    value="{{ request('search') }}"
+                >
+
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+
+                @if(request('search'))
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
+                        Reset
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
 
     <table class="table table-bordered">
         <thead>

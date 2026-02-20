@@ -206,6 +206,13 @@
         </a>
     </li>
 
+     <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.career.*') ? 'active fw-bold text-success' : '' }}"
+           href="{{ route('admin.career.index') }}">
+           <i class="bi bi-briefcase me-2"></i> Career Management
+        </a>
+    </li>
+
 </ul>
 
 </div>

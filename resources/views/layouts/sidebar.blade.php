@@ -11,7 +11,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ Route::is('products') ? 'active fw-bold text-success' : '' }}"
+            <a class="nav-link {{ Route::is('products.list') ? 'active fw-bold text-success' : '' }}"
                href="{{ route('products.list') }}">
                <i class="bi bi-box-seam me-2"></i> Products / Projects
             </a>
@@ -58,6 +58,14 @@
                <i class="bi bi-briefcase me-2"></i> Career
             </a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ Route::is('contact') ? 'active fw-bold text-success' : '' }}"
+               href="{{ route('contact') }}">
+               <i class="bi bi-envelope me-2"></i> Contact Us
+            </a>
+        </li>
+
 
     </ul>
 </div>

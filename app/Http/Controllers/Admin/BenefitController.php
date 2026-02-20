@@ -24,7 +24,7 @@ class BenefitController extends Controller
     {
         $data = $request->validate([
             'title' => 'required',
-            'description' => 'nullable',
+            'description' => 'required',
             'status' => 'boolean'
         ]);
 
@@ -42,19 +42,19 @@ class BenefitController extends Controller
     {
         $data = $request->validate([
             'title' => 'required',
-            'description' => 'nullable',
+            'description' => 'required',
             'status' => 'boolean'
         ]);
 
         $benefit->update($data);
 
-        return redirect()->route('admin.benefits.index')->with('success', 'Updated');
+        return redirect()->route('admin.benefits.index')->with('success', 'Benefit updated');
     }
 
     public function destroy(Benefit $benefit)
     {
         $benefit->delete();
-        return back()->with('success', 'Deleted');
+        return back()->with('success', 'Benefit deleted');
     }
 }
 

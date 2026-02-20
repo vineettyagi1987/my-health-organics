@@ -12,14 +12,30 @@ class DistributorController extends Controller
     /**
      * List all distributors
      */
-    public function index()
-    {
-        $distributors = User::where('role', User::ROLE_DISTRIBUTOR)
-            ->latest()
-            ->paginate(10);
+   public function index(Request $request)
+{
+    $query = User::where('role', User::ROLE_DISTRIBUTOR);
 
-        return view('admin.distributors.index', compact('distributors'));
+    // Apply search filter
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('email', 'like', "%$search%")
+              ->orWhere('phone', 'like', "%$search%")
+              ->orWhere('dist_id', 'like', "%$search%")
+              ->orWhere('region_area', 'like', "%$search%");
+        });
     }
+
+    $distributors = $query->latest()
+        ->paginate(10)
+        ->withQueryString(); // Keeps search during pagination
+
+    return view('admin.distributors.index', compact('distributors'));
+}
+
 
     /**
      * Show create form

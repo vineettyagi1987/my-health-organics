@@ -232,7 +232,7 @@ Despite our best intentions, it has become increasingly difficult to access pure
 
             With The Health Organics, let’s embrace nature, restore balance, and create a healthier future together.
         </p>
-        <a href="/contact" class="btn btn-success btn-lg">Contact Us</a>
+        <a href="{{ route('contact') }}" class="btn btn-success btn-lg">Contact Us</a>
     </section>
 
 

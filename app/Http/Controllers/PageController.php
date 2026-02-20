@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
-
+use App\Models\Benefit;
+use App\Models\Gallery;
+use App\Models\Term;
+use App\Models\Faq;
+use App\Models\Career;
 class PageController extends Controller
 {
     public function home()
@@ -35,16 +39,37 @@ class PageController extends Controller
 
     public function benefits()
     {
-        return view('pages.benefits');
+        $benefits = Benefit::where('status', 1)->latest()->get();
+        $terms = Term::latest()->get();
+        return view('pages.benefits', compact('benefits', 'terms'));
     }
 
     public function gallery()
     {
-        return view('pages.gallery');
+        $galleries = Gallery::latest()->get();
+         $faqs = Faq::where('status', 1)
+        ->latest()
+        ->get();
+        return view('pages.gallery', compact('galleries', 'faqs'));
     }
 
     public function career()
     {
-        return view('pages.career');
+         $career = Career::first();
+    
+        return view('pages.career', compact('career'));
+    }
+      public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'message' => 'required',
+        ]);
+        
+
+        // You can store in DB or send email here
+
+        return back()->with('success', 'Your message has been submitted successfully.');
     }
 }

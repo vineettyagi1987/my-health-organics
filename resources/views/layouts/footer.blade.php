@@ -20,7 +20,7 @@
           <li><a href="{{ route('products.list') }}" class="text-muted text-decoration-none d-block mb-2">Products</a></li>
           <li><a href="{{ route('benefits') }}" class="text-muted text-decoration-none d-block mb-2">Membership</a></li>
           <li><a href="{{ route('home') }}" class="text-muted text-decoration-none d-block mb-2">About Us</a></li>
-          <li><a href="/contact" class="text-muted text-decoration-none d-block">Contact Us</a></li>
+          <li><a href="{{ route('contact') }}" class="text-muted text-decoration-none d-block">Contact Us</a></li>
         </ul>
       </div>
 
@@ -28,9 +28,9 @@
       <div class="col-md-4">
         <h6 class="fw-semibold mb-3">Legal</h6>
         <ul class="list-unstyled small">
-          <li><a href="/privacy-policy" class="text-muted text-decoration-none d-block mb-2">Privacy Policy</a></li>
-          <li><a href="/terms-of-service" class="text-muted text-decoration-none d-block mb-2">Terms of Service</a></li>
-          <li><a href="/shipping-returns" class="text-muted text-decoration-none d-block">Shipping & Returns</a></li>
+          <li><a href="{{ route('benefits')}}" class="text-muted text-decoration-none d-block mb-2">Privacy Policy</a></li>
+          <li><a href="{{ route('career')}}" class="text-muted text-decoration-none d-block mb-2">Terms of Service</a></li>
+          <li><a href="{{ route('products.list')}}" class="text-muted text-decoration-none d-block">Shipping & Returns</a></li>
         </ul>
       </div>
 

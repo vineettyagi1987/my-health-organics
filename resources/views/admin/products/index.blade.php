@@ -16,6 +16,31 @@
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form method="GET" action="{{ route('admin.products.index') }}">
+            <div class="d-flex gap-2">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control"
+                    placeholder="Search by name, category, price..."
+                    value="{{ request('search') }}"
+                >
+
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+
+                @if(request('search'))
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
+                        Reset
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
 
 <table class="table table-bordered">
 <tr>

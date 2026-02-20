@@ -10,11 +10,30 @@ use Storage;
 use Str;
 class ProductController extends Controller
 {
-public function index()
+public function index(Request $request)
 {
-$products = Product::with('category')->latest()->paginate(10);
-return view('admin.products.index', compact('products'));
+    $query = Product::with('category');
+
+    // Apply search filter
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('price', 'like', "%$search%")
+              ->orWhereHas('category', function ($cat) use ($search) {
+                  $cat->where('name', 'like', "%$search%");
+              });
+        });
+    }
+
+    $products = $query->latest()
+        ->paginate(10)
+        ->withQueryString(); // keeps search in pagination
+
+    return view('admin.products.index', compact('products'));
 }
+
 
 
 public function create()

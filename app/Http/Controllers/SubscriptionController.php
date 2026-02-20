@@ -40,12 +40,12 @@ class SubscriptionController extends Controller
                 'user_id' => auth()->id(),
             ],
         ]);
-
+      
         // store locally
         Subscription::create([
             'user_id' => auth()->id(),
             'razorpay_subscription_id' => $rzpSub['id'],
-            'status' => 'created',
+            'status' =>  $rzpSub['status'],
         ]);
 
         return view('subscriptions.pay', [
@@ -94,58 +94,32 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    /** Cancel active subscription */
-    public function cancel($id)
+public function cancel($id)
 {
     $subscription = Subscription::where('user_id', auth()->id())
         ->findOrFail($id);
 
-    /**
-     * If already completed → just mark locally
-     * (No Razorpay cancel possible)
-     */
-    if ($subscription->status === 'completed') {
-
-        $subscription->update([
-            'status'   => 'cancelled',
-            'end_date' => now(),
-        ]);
-
-        return back()->with('info', 'Subscription already completed.');
-    }
-
-    /**
-     * If active → cancel on Razorpay
-     */
- if ($subscription->status === 'active') {
+    $api = new Api(config('razorpay.key'), config('razorpay.secret'));
 
     try {
-        $api = new Api(config('razorpay.key'), config('razorpay.secret'));
 
-        $api->subscription
-            ->fetch($subscription->razorpay_subscription_id)
-            ->cancel();
+        $rzpSub = $api->subscription->fetch($subscription->razorpay_subscription_id);
 
-        $subscription->update([
-            'status'   => 'cancelled',
-            'end_date' => now(),
-        ]);
+        if ($rzpSub['status'] !== 'active') {
+            return back()->with('warning', 'Subscription can not cancel currently. Please check later.');
+        }
 
-        return back()->with('success', 'Subscription cancelled successfully.');
+        $api->subscription->cancel($subscription->razorpay_subscription_id);
 
-    } catch (Exception $e) {
-       
-        /** Optional: log real error for debugging */
-      //  \Log::error('Razorpay Cancel Error: ' . $e->getMessage());
+        // DO NOT update DB manually
+        // Webhook will update status automatically
 
-       return back()->with('warning', 'Subscription cannot be cancelled in current state.');
+        return back()->with('success', 'Subscription cancellation requested.');
+
+    } catch (\Exception $e) {
+        return back()->with('error', $e->getMessage());
     }
-
-    /**
-     * Any other state
-     */
-    return back()->with('warning', 'Subscription cannot be cancelled in current state.');
 }
 
-}
+
 }

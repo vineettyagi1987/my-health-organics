@@ -3,7 +3,23 @@
 @section('content')
 <div class="container py-4">
     <h2 class="mb-4">Products</h2>
+    <form method="GET" action="{{ route('products.list') }}">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select name="category" class="form-control" onchange="this.form.submit()">
+                <option value="">-- All Categories --</option>
 
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}"
+                        {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+
+            </select>
+        </div>
+    </div>
+</form>
     <div class="row">
         @foreach($products as $product)
         <div class="col-md-3 mb-4">
@@ -43,6 +59,6 @@
         @endforeach
     </div>
 
-    {{ $products->links() }}
+   {{ $products->withQueryString()->links() }}
 </div>
 @endsection

@@ -68,7 +68,7 @@ class RazorpayController extends Controller
     $event = $data['event'] ?? null;
 
     Log::info('Razorpay Webhook Event: ' . $event);
-
+    
     switch ($event) {
         
         /** ================= PAYMENT CAPTURED ================= */
@@ -165,9 +165,7 @@ class RazorpayController extends Controller
             if ($subscription) {
                 $subscription->update([
                     'status'   => 'active',
-                    'end_date' => $subscription->end_date
-                        ? \Carbon\Carbon::parse($subscription->end_date)->addYear()
-                        : now()->addYear(),
+                    'end_date' => now()->addYear(),
                 ]);
             }
 

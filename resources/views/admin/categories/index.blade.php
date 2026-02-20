@@ -45,4 +45,5 @@
 </td>
 </tr>
 </table>
+ {{ $categories->links() }}
 @endsection

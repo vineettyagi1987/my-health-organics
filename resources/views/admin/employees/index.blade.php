@@ -6,6 +6,7 @@
 <div class="container">
 
 
+
 <div class="d-flex justify-content-between mb-3">
 <h4>Employees</h4>
 <a href="{{ route('admin.employees.create') }}" class="btn btn-success">Add Employee</a>
@@ -15,6 +16,31 @@
 @if(session('success'))
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form method="GET" action="{{ route('admin.employees.index') }}">
+            <div class="d-flex gap-2">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control" 
+                    placeholder="Search by name, email, phone, emp ID..."
+                    value="{{ request('search') }}"
+                >
+
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+
+                @if(request('search'))
+                    <a href="{{ route('admin.employees.index') }}" class="btn btn-secondary">
+                        Reset
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
 
 
 <table class="table table-bordered">
@@ -55,7 +81,7 @@
 </tr>
 @empty
 <tr>
-    <td colspan="5" class="text-center text-muted">No employees found.</td>
+    <td colspan="8" class="text-center text-muted">No employees found.</td>
 </tr>
 @endforelse
 </tbody>
