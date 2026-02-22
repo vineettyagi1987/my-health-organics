@@ -19,7 +19,8 @@ public function index(Request $request)
         'Aayurvedic Products',
         'Home & Office Care',
         'Agro Care',
-        'Vetorinary Care'
+        'Vetorinary Care',
+        'Life Care'
     ];
 
     // Get only allowed categories for dropdown

@@ -25,16 +25,16 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ Route::is('guidance') ? 'active fw-bold text-success' : '' }}"
-               href="{{ route('guidance') }}">
-               <i class="bi bi-lightbulb me-2"></i> Guidance & Counselling
+            <a class="nav-link {{ request()->routeIs('events.index') && request('type') == 'guidance' ? 'active fw-bold text-success' : '' }}"
+            href="{{ route('events.index', ['type' => 'guidance']) }}">
+                <i class="bi bi-lightbulb me-2"></i> Guidance & Counselling
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ Route::is('yoga') ? 'active fw-bold text-success' : '' }}"
-               href="{{ route('yoga') }}">
-               <i class="bi bi-heart-pulse me-2"></i> Yoga & Ayurved
+            <a class="nav-link {{ request()->routeIs('events.index') && request('type') == 'yoga' ? 'active fw-bold text-success' : '' }}"
+            href="{{ route('events.index', ['type' => 'yoga']) }}">
+                <i class="bi bi-heart-pulse me-2"></i> Yoga & Ayurved
             </a>
         </li>
 

@@ -96,6 +96,9 @@
     <a class="dropdown-item" href="{{ route('subscription.profile') }}">
         My Membership
     </a>
+     <a class="dropdown-item" href="{{ route('my.bookings') }}">
+        My Bookings
+    </a>
 </li>
         <li><hr class="dropdown-divider"></li>
 

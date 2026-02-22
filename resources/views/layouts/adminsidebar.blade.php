@@ -212,6 +212,24 @@
            <i class="bi bi-briefcase me-2"></i> Career Management
         </a>
     </li>
+     <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.event_categories.*') ? 'active fw-bold text-success' : '' }}"
+           href="{{ route('admin.event_categories.index') }}">
+           <i class="bi bi-briefcase me-2"></i> Event Categories
+        </a>
+    </li>
+     <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.faculties.*') ? 'active fw-bold text-success' : '' }}"
+           href="{{ route('admin.faculties.index') }}">
+           <i class="bi bi-briefcase me-2"></i> Team Members
+        </a>
+    </li>
+     <li class="nav-item">
+        <a class="nav-link {{ Route::is('admin.events.*') ? 'active fw-bold text-success' : '' }}"
+           href="{{ route('admin.events.index') }}">
+           <i class="bi bi-briefcase me-2"></i> Events Management
+        </a>
+    </li>
 
 </ul>
 

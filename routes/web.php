@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\CareerController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\FacultyController;
+use App\Http\Controllers\Admin\EventCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -25,7 +28,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\ContactController;
-
+use App\Http\Controllers\FrontEventController;
 use App\Http\Controllers\DashboardController as UserDashboardController;
 
 
@@ -87,6 +90,9 @@ Route::prefix('admin')
         Route::post('/subscriptions/{id}/cancel', [AdminSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
         Route::get('/career', [CareerController::class, 'index'])->name('career.index');
          Route::post('/career', [CareerController::class, 'store'])->name('career.store');
+         Route::resource('events', EventController::class);
+         Route::resource('faculties', FacultyController::class);
+         Route::resource('event_categories',EventCategoryController::class);
 
     });
 
@@ -111,7 +117,7 @@ Route::prefix('customer')
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/products-projects', [PageController::class, 'products'])->name('products');
 Route::get('/events', [PageController::class, 'events'])->name('events');
-Route::get('/guidance-counselling', [PageController::class, 'guidance'])->name('guidance');
+
 Route::get('/yoga-ayurved', [PageController::class, 'yoga'])->name('yoga');
 Route::get('/member-benefits', [PageController::class, 'benefits'])->name('benefits');
 Route::get('/media-gallery', [PageController::class, 'gallery'])->name('gallery');
@@ -180,4 +186,16 @@ Route::post('/razorpay/payment', [RazorpayController::class, 'payment']);
 Route::post('/razorpay/webhook', [RazorpayController::class, 'webhook']);
 
 //Route::post('/subscribe', [SubscriptionController::class, 'store']);
+// Route::get('/guidance-counselling', [PageController::class, 'guidance'])->name('guidance');
+
+Route::get('/eventsList',[FrontEventController::class,'index'])->name('events.index');
+Route::post('/events/book/{id}',[FrontEventController::class,'book'])->middleware('auth');
+Route::get('/payment-success',[FrontEventController::class,'paymentSuccess'])->name('payment.success');
+Route::get('/my-bookings',[FrontEventController::class,'myBookings'])
+    ->middleware('auth')
+    ->name('my.bookings');
+
+
+
+
 

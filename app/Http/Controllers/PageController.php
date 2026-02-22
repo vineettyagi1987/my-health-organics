@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Benefit;
@@ -8,6 +9,7 @@ use App\Models\Gallery;
 use App\Models\Term;
 use App\Models\Faq;
 use App\Models\Career;
+
 class PageController extends Controller
 {
     public function home()
@@ -56,10 +58,10 @@ class PageController extends Controller
     public function career()
     {
          $career = Career::first();
-    
+        
         return view('pages.career', compact('career'));
     }
-      public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required',
