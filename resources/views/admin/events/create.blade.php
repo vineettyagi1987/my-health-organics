@@ -92,7 +92,16 @@
         placeholder="Zoom / Google Meet link">
 
         </div>
+        <div class="mb-3">
+            <label>Status</label>
 
+        <select name="status" class="form-control">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+        </div>
     <button class="btn btn-success">Create Event</button>
 </form>
 </div>

@@ -162,8 +162,16 @@ value="{{ $event->meeting_link }}"
 placeholder="Zoom / Google Meet link">
 
 </div>
+<div class="mb-3">
+    <label>Status</label>
 
-
+    <select name="status" class="form-control" required>
+        <option value="active" {{ $event->status == 'active' ? 'selected' : '' }}>Active</option>
+        <option value="inactive" {{ $event->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+        <option value="completed" {{ $event->status == 'completed' ? 'selected' : '' }}>Completed</option>
+        <option value="cancelled" {{ $event->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+    </select>
+</div>
 
 <button class="btn btn-success">
 

@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use Razorpay\Api\Api;
 use App\Models\Event;
 use App\Models\EventBooking;
+use App\Models\EventCategory;
 class FrontEventController extends Controller
 {
     public function guidance()
@@ -16,10 +17,39 @@ class FrontEventController extends Controller
         return view('frontend.events.index',compact('events'));
     }
 
-     public function index()
+    public function index(Request $request)
     {
-        $events = Event::with('faculties','category')->get();
-        return view('frontend.events.index',compact('events'));
+
+       $query = Event::where('status','active')->with(['faculties','category']);
+        // Category dropdown filter
+        if ($request->category) {
+            $query->where('event_category_id', $request->category);
+        }
+        if ($request->type == 'guidance') {
+
+            $categories = EventCategory::whereIn('name', ['education','Nature Culture & Moral Care','Farmers & Soil Care'])->get();
+
+            $categoryIds = $categories->pluck('id');
+
+            $query->whereIn('event_category_id', $categoryIds);
+        } 
+        else  if ($request->type == 'yoga') {
+
+            $categories = EventCategory::whereIn('name', ['Yoga & Meditation','Ayurvedic Doctors'])->get();
+
+            $categoryIds = $categories->pluck('id');
+
+            $query->whereIn('event_category_id', $categoryIds);
+        } 
+        else {
+            $categories = EventCategory::all();
+        }
+
+        $events = $query->latest()->get();
+
+        return view('frontend.events.index', compact('events','categories'));
+
+
     }
 
     public function book($id)

@@ -30,6 +30,7 @@ Add Event
 <th>Team Members</th>
 <th>Date</th>
 <th>Price</th>
+<th>Status</th>
 <th>Meeting Link</th>
 <th width="150">Action</th>
 </tr>
@@ -76,7 +77,18 @@ Add Event
 ₹{{ $event->price }}
 
 </td>
-
+<td>
+    @if($event->status == 'active')
+    <span class="badge bg-success">Active</span>
+    
+    @elseif($event->status == 'inactive')
+    <span class="badge bg-warning">Inactive</span>
+    @elseif($event->status == 'completed')
+    <span class="badge bg-secondary">Completed</span>
+    @elseif($event->status == 'cancelled')
+    <span class="badge bg-danger">Cancelled</span>
+    @endif
+</td>
 <td>
 <a href="{{ $event->meeting_link }}" target="_blank">Click Here</a>
 </td>

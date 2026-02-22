@@ -46,7 +46,8 @@ class EventController extends Controller
             'event_date'        => 'required|date',
             'event_time'        => 'required',
             'price'             => 'required|numeric|min:0',
-            'faculties'         => 'required|array'
+            'faculties'         => 'required|array',
+            'status'           => 'required|in:active,inactive,completed,cancelled'
         ]);
         // Combine date and time
     $event_datetime = $request->event_date.' '.$request->event_time;
@@ -57,6 +58,7 @@ class EventController extends Controller
             'event_date'        => $event_datetime,
             'price'             => $request->price,
             'meeting_link'      => $request->meeting_link,
+            'status'            => $request->status
         ]);
 
         // Attach multiple faculties
@@ -85,6 +87,7 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
+       
         $request->validate([
             'title'             => 'required|string|max:255',
             'description'       => 'required',
@@ -92,7 +95,8 @@ class EventController extends Controller
             'event_date'        => 'required|date',
             'event_time'        => 'required',
             'price'             => 'required|numeric|min:0',
-            'faculties'         => 'required|array'
+            'faculties'         => 'required|array',
+            'status'           => 'required|in:active,inactive,completed,cancelled'
         ]);
 
         $event = Event::findOrFail($id);
@@ -104,6 +108,7 @@ class EventController extends Controller
             'event_date'        => $event_datetime,
             'price'             => $request->price,
             'meeting_link'      => $request->meeting_link,
+            'status'            => $request->status
         ]);
 
         // Sync faculties

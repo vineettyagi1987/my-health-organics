@@ -1,8 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 
-<div class="container py-5">
+<div class="container-fluid py-5">
 
     <div class="row mb-4">
         <div class="col text-center">
@@ -10,102 +9,148 @@
             <p class="text-muted">Join our live webinars and training sessions</p>
         </div>
     </div>
+    <div class="row mb-4 justify-content-center">
 
-    {{-- Alerts Section --}}
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="col-md-4">
 
-            @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            @endif
+        <form method="GET" action="{{ url()->current() }}">
+              @if(request('type'))
+                    <input type="hidden" name="type" value="{{ request('type') }}">
+                @endif
+            <select name="category" class="form-select" onchange="this.form.submit()">
 
-            @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            @endif
+                <option value="">All Categories</option>    
 
-            @if(request('error') == 'payment_failed')
-            <div class="alert alert-danger">
-                Payment failed. Please try again.
-            </div>
-            @endif
+                @foreach($categories as $category)
 
-            @if(request('error') == 'payment_cancelled')
-            <div class="alert alert-warning">
-                Payment cancelled by user.
-            </div>
-            @endif
+                <option value="{{ $category->id }}"
+                    {{ request('category') == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
 
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+                @endforeach
 
-        </div>
+            </select>
+
+        </form>
+
     </div>
 
-
-    {{-- Events List --}}
-    <div class="row g-4">
+</div>
+    <div class="row">
 
         @forelse($events as $event)
 
-        <div class="col-lg-4 col-md-6">
+        <div class="col-12 mb-4">
 
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card shadow-sm border-0">
 
-                <div class="card-body d-flex flex-column">
+                <div class="card-body">
 
-                    <h5 class="card-title fw-semibold">
-                        {{ $event->title }}
-                    </h5>
+                    <div class="row">
 
-                    <p class="text-muted small mb-2">
-                        {{ $event->description }}
-                    </p>
+                        {{-- Event Info --}}
+                        <div class="col-lg-5">
+                            @if($event->category)
+                            <span class="badge bg-info mb-2">
+                                {{ $event->category->name }}
+                            </span>
+                            @endif
+                            <h4 class="fw-bold mb-2">
+                                {{ $event->title }}
+                            </h4>
 
-                    <div class="mb-2">
-                        <strong>Date:</strong>
-                        {{ \Carbon\Carbon::parse($event->event_date)->format('d M Y H:i') }}
-                    </div>
+                            <p class="text-muted">
+                                {{ $event->description }}
+                            </p>
 
-                    <div class="mb-2">
-                        <strong>Price:</strong>
-                        <span class="text-success fw-bold">
-                            ₹{{ $event->price }}
-                        </span>
-                    </div>
+                            <div class="mb-2">
+                                <strong>Date:</strong>
+                                {{ \Carbon\Carbon::parse($event->event_date)->format('d M Y H:i') }}
+                            </div>
 
-                    <div class="mb-3">
-                        <strong>Team Members:</strong><br>
+                            <div class="mb-3">
+                                <strong>Price:</strong>
+                                <span class="text-success fw-bold fs-5">
+                                    ₹{{ $event->price }}
+                                </span>
+                            </div>
+                            @if($event->status == 'active')
+                                <span class="badge bg-success">Active</span>
+                                @elseif($event->status == 'completed')
+                                <span class="badge bg-secondary">Completed</span>
+                                @elseif($event->status == 'cancelled')
+                                <span class="badge bg-danger">Cancelled</span>
+                                @endif
+                        </div>
 
-                        @foreach($event->faculties as $faculty)
-                        <span class="badge bg-primary me-1">
-                            {{ $faculty->name }}
-                        </span>
-                        @endforeach
-                    </div>
 
-                    <div class="mt-auto">
+                        {{-- Faculty Section --}}
+                        <div class="col-lg-5">
 
-                        <form method="POST" action="{{ url('/events/book/'.$event->id) }}">
-                            @csrf
+                            <strong>Event Team Members</strong>
 
-                            <button class="btn btn-primary w-100">
-                                Book Event
-                            </button>
+                            <div class="mt-3">
 
-                        </form>
+                                @foreach($event->faculties as $faculty)
+
+                                <div class="d-flex align-items-start mb-3 border rounded p-2">
+
+                                    {{-- Faculty Image --}}
+                                    @if($faculty->image)
+                                    <img src="{{ asset('storage/'.$faculty->image) }}"
+                                        class="rounded-circle me-3"
+                                        width="60"
+                                        height="60">
+                                    @else
+                                    <img src="https://via.placeholder.com/60"
+                                        class="rounded-circle me-3">
+                                    @endif
+
+                                    {{-- Faculty Details --}}
+                                    <div>
+
+                                        <h6 class="mb-1 fw-bold">
+                                            {{ $faculty->name }}
+                                        </h6>
+
+                                        @if($faculty->designation)
+                                        <div class="text-muted small">
+                                            {{ $faculty->designation }}
+                                        </div>
+                                        @endif
+                                         @if($faculty->qualifications)
+                                        <div class="text-muted small">
+                                            {{ $faculty->qualifications }}
+                                        </div>
+                                        @endif
+
+                                        @if($faculty->bio)
+                                        <div class="small mt-1">
+                                            {{ Str::limit($faculty->bio,80) }}
+                                        </div>
+                                        @endif
+
+                                    </div>
+
+                                </div>
+
+                                @endforeach
+
+                            </div>
+
+
+                            {{-- Book Button --}}
+                            <form method="POST" action="{{ url('/events/book/'.$event->id) }}">
+                                @csrf
+
+                                <button class="btn btn-primary w-100 mt-2">
+                                    Book Event
+                                </button>
+
+                            </form>
+
+                        </div>
 
                     </div>
 
