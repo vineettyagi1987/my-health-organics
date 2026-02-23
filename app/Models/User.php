@@ -98,6 +98,39 @@ protected static function booted()
     });
 }
 
+public function latestSubscription()
+{
+    return $this->hasOne(Subscription::class,'user_id')->latestOfMany();
+}
+
+public function activeSubscription()
+{
+    return $this->hasOne(Subscription::class,'user_id')
+        ->latestOfMany()
+        ->where('status','active');
+}
+public function wallet()
+{
+return $this->hasOne(Wallet::class);
+}
+
+public function bankAccount()
+{
+return $this->hasOne(BankAccount::class);
+}
+
+protected static function boot()
+{
+    parent::boot();
+
+    static::created(function ($user) {
+        \App\Models\Wallet::create([
+            'user_id' => $user->id,
+            'balance' => 0
+        ]);
+    });
+}
+
 
 }
 

@@ -99,6 +99,19 @@
      <a class="dropdown-item" href="{{ route('my.bookings') }}">
         My Bookings
     </a>
+    </li>
+    <li>
+    <a class="dropdown-item" href="{{ route('user.referrals') }}">My Network Growth</a>
+    </li>
+
+    <li>
+    <a class="dropdown-item" href="{{ route('user.wallet') }}">My Wallet</a>
+    </li>
+    <li>
+    <a class="dropdown-item" href="{{ route('user.withdraw') }}">My Withdrawals</a>
+    </li>
+    <li>
+<a  class="dropdown-item"  href="{{ route('user.bank') }}">Bank Account</a>
 </li>
         <li><hr class="dropdown-divider"></li>
 
@@ -113,10 +126,7 @@
         </li>
 
     </ul>
-
-
-
-    </div>
+ </div>
 @endauth
 
         </div>

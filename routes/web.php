@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FacultyController;
 use App\Http\Controllers\Admin\EventCategoryController;
 use App\Http\Controllers\Admin\ComingSoonController;
+use App\Http\Controllers\Admin\AdminReferralController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -31,13 +32,15 @@ use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FrontEventController;
 use App\Http\Controllers\DashboardController as UserDashboardController;
-
-
+use App\Http\Controllers\User\WalletController;
+use App\Http\Controllers\Admin\AdminWithdrawalController;
+use App\Http\Controllers\User\UserReferralController;
+use App\Http\Controllers\User\WithdrawController;
+use App\Http\Controllers\User\BankAccountController;
 use App\Http\Controllers\ProductController as FrontendProductController;
 
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 /*
-|--------------------------------------------------------------------------
 | Auth Routes
 |--------------------------------------------------------------------------
 */
@@ -95,6 +98,13 @@ Route::prefix('admin')
          Route::resource('faculties', FacultyController::class);
          Route::resource('event_categories',EventCategoryController::class);
          Route::resource('comingsoon', ComingSoonController::class);
+
+         Route::get('referral-tree', [AdminReferralController::class,'index'])->name('referral.tree');
+
+         Route::get('withdrawals',[AdminWithdrawalController::class,'index'])->name('withdrawals');
+        Route::post('withdrawals/{id}/approve',[AdminWithdrawalController::class,'approve']);
+
+
 
     });
 
@@ -182,6 +192,17 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/profile/update', [UserDashboardController::class, 'updateProfile'])
             ->name('profile.update');
+        Route::get('my-referrals',[UserReferralController::class,'index'])->name('user.referrals');
+        Route::get('wallet',[WalletController::class,'index'])->name('user.wallet');
+       
+        
+        Route::get('/bank-account',[BankAccountController::class,'index'])->name('user.bank');
+
+Route::post('/bank-account',[BankAccountController::class,'store'])->name('user.bank.store');
+
+Route::get('/withdraw',[WithdrawController::class,'index'])->name('user.withdraw');
+
+Route::post('/withdraw',[WithdrawController::class,'requestWithdraw'])->name('user.withdraw.request');
         
 });
 

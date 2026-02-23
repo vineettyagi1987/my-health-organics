@@ -230,6 +230,18 @@
            <i class="bi bi-briefcase me-2"></i> Events Management
         </a>
     </li>
+   <li class="nav-item">
+    <a class="nav-link {{ Route::is('admin.referral.tree*') ? 'active fw-bold text-success' : '' }}"
+       href="{{ route('admin.referral.tree') }}">
+       <i class="bi bi-briefcase me-2"></i> Network Growth
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link {{ Route::is('admin.withdrawals*') ? 'active fw-bold text-success' : '' }}"
+       href="{{ route('admin.withdrawals') }}">
+       <i class="bi bi-briefcase me-2"></i> Withdrawals
+    </a>
+</li>
 
 </ul>
 
