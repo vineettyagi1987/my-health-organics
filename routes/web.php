@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FacultyController;
 use App\Http\Controllers\Admin\EventCategoryController;
+use App\Http\Controllers\Admin\ComingSoonController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -93,6 +94,7 @@ Route::prefix('admin')
          Route::resource('events', EventController::class);
          Route::resource('faculties', FacultyController::class);
          Route::resource('event_categories',EventCategoryController::class);
+         Route::resource('comingsoon', ComingSoonController::class);
 
     });
 
@@ -116,7 +118,7 @@ Route::prefix('customer')
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/products-projects', [PageController::class, 'products'])->name('products');
-Route::get('/events', [PageController::class, 'events'])->name('events');
+// Route::get('/events', [PageController::class, 'events'])->name('events');
 
 Route::get('/yoga-ayurved', [PageController::class, 'yoga'])->name('yoga');
 Route::get('/member-benefits', [PageController::class, 'benefits'])->name('benefits');
@@ -125,7 +127,8 @@ Route::get('/career', [PageController::class, 'career'])->name('career');
 Route::post('/career/contact', [PageController::class, 'store'])->name('career.contact');
 
 //
-
+Route::get('renewal-energy/products', [FrontendProductController::class, 'energyProducts'])->name('products.energyProducts');
+Route::get('/product/{slug}', [FrontendProductController::class, 'show']);
 
 Route::get('/products', [FrontendProductController::class, 'index'])->name('products.list');
 Route::get('/product/{slug}', [FrontendProductController::class, 'show']);
@@ -194,6 +197,7 @@ Route::get('/payment-success',[FrontEventController::class,'paymentSuccess'])->n
 Route::get('/my-bookings',[FrontEventController::class,'myBookings'])
     ->middleware('auth')
     ->name('my.bookings');
+    
 
 
 

@@ -41,6 +41,32 @@ public function index(Request $request)
     return view('products.index', compact('products', 'categories'));
 }
 
+
+public function energyProducts(Request $request)
+{
+    $allowedCategories = [
+        'Renewalable Energy Products',
+        'Plastic Free Events'
+    ];
+
+    // Get only allowed categories for dropdown
+    $categories = Category::whereIn('name', $allowedCategories)->get();
+
+    $products = Product::where('status', 1)
+        ->whereHas('category', function ($query) use ($allowedCategories, $request) {
+            $query->whereIn('name', $allowedCategories);
+
+            // If category selected from dropdown
+            if ($request->category) {
+                $query->where('id', $request->category);
+            }
+        })
+        ->latest()
+        ->paginate(12);
+
+    return view('products.energyProducts', compact('products', 'categories'));
+}
+
     /**
      * Product details page
      */

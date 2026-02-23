@@ -34,6 +34,7 @@
             </div>
         @endforelse
     </div>
+    {{ $galleries->links() }}
 <div class="container py-5">
 
     <!-- Page Heading -->
@@ -75,5 +76,76 @@
     </div>
 
 </div>
+</div>
+<div class="container py-0">
+
+<div class="row mb-4 text-center">
+<h2 class="fw-bold">Coming Soon</h2>
+<p class="text-muted">Stay tuned for our upcoming products, meetings and seminars</p>
+</div>
+
+<div class="row">
+
+@forelse($items as $item)
+
+<div class="col-lg-4 col-md-6 mb-4">
+
+<div class="card h-100 shadow-sm border-0">
+
+@if($item->image)
+<img src="{{ asset('storage/'.$item->image) }}"
+class="card-img-top"
+style="height:200px;object-fit:cover;">
+@endif
+
+<div class="card-body">
+
+<span class="badge bg-info mb-2">
+{{ ucfirst($item->type) }}
+</span>
+
+<h5 class="card-title">
+{{ $item->title }}
+</h5>
+
+<p class="text-muted small">
+{{ Str::limit($item->description,100) }}
+</p>
+
+@if($item->launch_date)
+<p class="mb-1">
+<strong>Launch Date:</strong>
+{{ \Carbon\Carbon::parse($item->launch_date)->format('d M Y') }}
+</p>
+@endif
+
+@if($item->location)
+<p class="mb-2">
+<strong>Location:</strong> {{ $item->location }}
+</p>
+@endif
+
+<span class="badge bg-warning text-dark">
+Coming Soon
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+@empty
+
+<div class="col-12 text-center">
+<div class="alert alert-info">
+No upcoming items available.
+</div>
+</div>
+
+@endforelse
+
+</div>
+
 </div>
 @endsection

@@ -9,7 +9,7 @@ use App\Models\Gallery;
 use App\Models\Term;
 use App\Models\Faq;
 use App\Models\Career;
-
+use App\Models\ComingSoonItem;
 class PageController extends Controller
 {
     public function home()
@@ -48,11 +48,14 @@ class PageController extends Controller
 
     public function gallery()
     {
-        $galleries = Gallery::latest()->get();
+        $galleries = Gallery::latest()->paginate(10);
          $faqs = Faq::where('status', 1)
         ->latest()
         ->get();
-        return view('pages.gallery', compact('galleries', 'faqs'));
+        $items = ComingSoonItem::where('status','active')
+                    ->orderBy('launch_date','asc')
+                    ->get();
+        return view('pages.gallery', compact('galleries', 'faqs', 'items'));
     }
 
     public function career()
