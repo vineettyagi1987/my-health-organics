@@ -3,7 +3,8 @@
 @section('content')
 
 <div class="container">
-
+ <div class="row justify-content-center">
+        <div class="col-md-6">
 <h3>Bank Account Details</h3>
 {{-- Flash Error Message --}}
     @if($errors->any())
@@ -45,5 +46,6 @@ value="{{ $bank->bank_name ?? '' }}">
 </form>
 
 </div>
-
+</div>
+</div>
 @endsection
