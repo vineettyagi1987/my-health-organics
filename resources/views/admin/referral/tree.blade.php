@@ -32,6 +32,7 @@
 <th>Total Users</th>
 <th>Eligible Users</th>
 <th>Commission</th>
+<th>Bonus</th>
 </tr>
 
 @foreach($commissionSummary['levels'] as $level => $data)
@@ -41,6 +42,7 @@
 <td>{{ $data['users'] }}</td>
 <td>{{ $data['eligible'] }}</td>
 <td>₹ {{ $data['commission'] }}</td>
+<td>₹ {{ $data['bonus'] ?? 0 }}</td>
 </tr>
 
 @endforeach
