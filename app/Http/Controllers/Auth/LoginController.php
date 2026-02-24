@@ -83,10 +83,10 @@ class LoginController extends Controller
         return redirect()->route('admin.dashboard');
     }
      if ($user->role === 'employee') {
-        return redirect('/');
+        return redirect()->route('employee.dashboard');
     }
     if ($user->role === 'distributor') {
-         return redirect('/');
+        return redirect()->route('distributor.dashboard');
     }
 
     if ($user->role === 'customer') {

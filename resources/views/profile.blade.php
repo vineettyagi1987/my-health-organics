@@ -48,29 +48,31 @@
         </div>
 
         {{-- Referral Section --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-4 text-center">
-                <div class="card-body">
+    @if(!in_array($user->role, ['employee','distributor']))
+<div class="col-md-6">
+    <div class="card shadow-sm mb-4 text-center">
+        <div class="card-body">
 
-                    <h5 class="fw-bold text-success mb-3">My Referral Code</h5>
+            <h5 class="fw-bold text-success mb-3">My Referral Code</h5>
 
-                    <div class="fs-4 fw-bold text-primary mb-2">
-                        {{ $user->my_referral_code }}
-                    </div>
-
-                    <button class="btn btn-outline-success btn-sm mb-3"
-                            onclick="copyReferralCode()">
-                        Copy Code
-                    </button>
-
-                    <p class="small text-muted">
-                        Share this link:<br>
-                        <strong>{{ url('/register?ref=' . $user->my_referral_code) }}</strong>
-                    </p>
-
-                </div>
+            <div class="fs-4 fw-bold text-primary mb-2">
+                {{ $user->my_referral_code }}
             </div>
+
+            <button class="btn btn-outline-success btn-sm mb-3"
+                    onclick="copyReferralCode()">
+                Copy Code
+            </button>
+
+            <p class="small text-muted">
+                Share this link:<br>
+                <strong>{{ url('/register?ref=' . $user->my_referral_code) }}</strong>
+            </p>
+
         </div>
+    </div>
+</div>
+@endif
 
     </div>
 </div>

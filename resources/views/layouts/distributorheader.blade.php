@@ -16,7 +16,7 @@
     <div class="container">
 
       <!-- Logo -->
-      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-success" href="/">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-success" href="{{ route('distributor.dashboard') }}">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
           <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
           <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
@@ -57,8 +57,10 @@
             {{ auth()->user()->name }} ({{ auth()->user()->role }})
         </a>
 
-      <ul class="dropdown-menu dropdown-menu-end">
-
+        <ul class="dropdown-menu dropdown-menu-end">
+         <li>
+            <a class="dropdown-item" href="{{ route('profile') }}">My Profile</a>
+        </li>
         {{-- Orders --}}
         <li>
             <a class="dropdown-item" href="{{ route('orders.index') }}">
@@ -93,7 +95,6 @@
         </li>
 
     </ul>
-        </ul>
     </div>
 @endauth
 

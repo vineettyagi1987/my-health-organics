@@ -243,6 +243,24 @@
     </a>
 </li>
 
+<li class="nav-item">
+    <a class="nav-link {{ Route::is('admin.targets*') ? 'active fw-bold text-success' : '' }}"
+       href="{{ route('admin.targets.index') }}">
+       <i class="bi bi-briefcase me-2"></i> Targets
+    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link {{ Route::is('admin.employee.sales*') ? 'active fw-bold text-success' : '' }}"
+   href="{{ route('admin.employee.sales') }}">
+  <i class="bi bi-briefcase me-2"></i> Employee Sales
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link {{ Route::is('admin.distributor.dashboard*') ? 'active fw-bold text-success' : '' }}"
+   href="{{ route('admin.distributor.dashboard') }}">
+  <i class="bi bi-briefcase me-2"></i> Distributor Dashboard
+</a>
+</li>
 </ul>
 
 </div>

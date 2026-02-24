@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\FacultyController;
 use App\Http\Controllers\Admin\EventCategoryController;
 use App\Http\Controllers\Admin\ComingSoonController;
 use App\Http\Controllers\Admin\AdminReferralController;
+use App\Http\Controllers\Admin\EmployeeTargetController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -38,7 +39,10 @@ use App\Http\Controllers\User\UserReferralController;
 use App\Http\Controllers\User\WithdrawController;
 use App\Http\Controllers\User\BankAccountController;
 use App\Http\Controllers\ProductController as FrontendProductController;
-
+use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;
+use App\Http\Controllers\Admin\EmployeeSalesController;
+use App\Http\Controllers\Distributor\DashboardController;
+use App\Http\Controllers\Admin\DistributorDashboardController;
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 /*
 | Auth Routes
@@ -66,7 +70,13 @@ Route::prefix('admin')
     ->middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
-
+        Route::get('/distributor-dashboard',
+            [DistributorDashboardController::class,'index'])
+            ->name('distributor.dashboard');
+            
+        Route::get('/employee-sales',[EmployeeSalesController::class,'index'])
+            ->name('employee.sales');
+        Route::resource('targets', EmployeeTargetController::class);
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
        
@@ -218,6 +228,34 @@ Route::get('/payment-success',[FrontEventController::class,'paymentSuccess'])->n
 Route::get('/my-bookings',[FrontEventController::class,'myBookings'])
     ->middleware('auth')
     ->name('my.bookings');
+
+Route::middleware(['auth'])->prefix('employee')->group(function(){
+
+    Route::get('/dashboard',[EmployeeDashboardController::class,'index'])->name('employee.dashboard');
+
+    Route::post('/sale/store',[EmployeeDashboardController::class,'store'])->name('employee.sale.store');
+    Route::get('/sale/edit/{id}',[EmployeeDashboardController::class,'edit'])->name('employee.sale.edit');
+
+    Route::post('/sale/update/{id}',[EmployeeDashboardController::class,'update'])->name('employee.sale.update');
+
+
+});
+
+Route::prefix('distributor')->middleware(['auth'])->group(function(){
+
+        Route::get('/dashboard',[DashboardController::class,'index'])
+        ->name('distributor.dashboard');
+
+        Route::post('/sale/store',[DashboardController::class,'store'])
+        ->name('distributor.sale.store');
+
+        Route::get('/sale/edit/{id}',[DashboardController::class,'edit'])
+        ->name('distributor.sale.edit');
+
+        Route::post('/sale/update/{id}',[DashboardController::class,'update'])
+        ->name('distributor.sale.update');
+
+});
     
 
 
