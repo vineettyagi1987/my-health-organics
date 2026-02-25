@@ -85,19 +85,19 @@
             <a class="dropdown-item" href="{{ route('subscription.profile') }}">
                 My Membership
             </a>
-            <a class="dropdown-item" href="{{ route('my.bookings') }}">
+            <!-- <a class="dropdown-item" href="{{ route('my.bookings') }}">
                 My Bookings
-            </a>
+            </a> -->
          </li>
      <li>
-    <a class="dropdown-item" href="{{ route('user.wallet') }}">My Wallet</a>
+        <a class="dropdown-item" href="{{ route('user.wallet') }}">My Wallet</a>
+        </li>
+        <li>
+        <a class="dropdown-item" href="{{ route('user.withdraw') }}">My Withdrawals</a>
+        </li>
+        <li>
+         <a  class="dropdown-item"  href="{{ route('user.bank') }}">Bank Account</a>
     </li>
-    <li>
-    <a class="dropdown-item" href="{{ route('user.withdraw') }}">My Withdrawals</a>
-    </li>
-    <li>
-<a  class="dropdown-item"  href="{{ route('user.bank') }}">Bank Account</a>
-</li>
         <li><hr class="dropdown-divider"></li>
 
         {{-- Logout --}}

@@ -35,7 +35,9 @@ class User extends Authenticatable
         'commission_rate',
           'emp_id',
          'dist_id',
-         'is_admin'
+         'is_admin',
+            'profile_photo',
+            'id_card'
     ];
 
     /**

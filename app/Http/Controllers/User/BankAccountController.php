@@ -11,11 +11,11 @@ class BankAccountController extends Controller
 public function index()
 {
 
-$user = auth()->user();
+    $user = auth()->user();
 
-$bank = $user->bankAccount;
+    $bank = $user->bankAccount;
 
-return view('user.bank.index',compact('bank'));
+    return view('user.bank.index',compact('bank'));
 
 }
 

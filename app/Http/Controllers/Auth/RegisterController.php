@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Str;
 use Illuminate\Http\Request;
+use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 class RegisterController extends Controller
 {
     /*
@@ -55,6 +57,7 @@ class RegisterController extends Controller
             'phone' => ['required', 'string', 'max:15'],
             'referral_code' => ['required', 'exists:users,my_referral_code'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'profile_photo' => ['required','image','mimes:jpg,jpeg,png','max:2048'],
         ]);
     }
 
@@ -64,17 +67,62 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'referral_code' => $data['referral_code'],
-            'my_referral_code' => strtoupper(Str::random(8)),
-            'password' => Hash::make($data['password']),
-        ]);
+
+
+protected function create(array $data)
+{
+    $profilePhoto = null;
+    $idCard = null;
+
+    if (request()->hasFile('profile_photo')) {
+
+        $file = request()->file('profile_photo');
+
+        $photoName = time().'.'.$file->getClientOriginalExtension();
+
+        $file->move(public_path('profiles'), $photoName);
+
+        $profilePhoto = 'profiles/'.$photoName;
+
+        $photoPath = public_path($profilePhoto);
+
+        // Load frame first
+        $frame = Image::read(public_path('idcard/frame.png'));
+
+        $frameWidth  = $frame->width();
+        $frameHeight = $frame->height();
+
+        // Crop user photo from center
+          $photo = Image::read($photoPath)->cover(650,650,'top');
+
+        // Create canvas same size as frame
+        $canvas = Image::create($frameWidth, $frameHeight);
+
+        // Place photo in center
+        $canvas->place($photo, 'center');
+
+        // Overlay frame on top
+        $canvas->place($frame, 'center');
+
+        // Save generated ID card
+        $idCardName = time().'_idcard.png';
+
+        $canvas->save(public_path('idcards/'.$idCardName));
+
+        $idCard = 'idcards/'.$idCardName;
     }
+
+    return User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'phone' => $data['phone'],
+        'referral_code' => $data['referral_code'],
+        'my_referral_code' => strtoupper(Str::random(8)),
+        'password' => Hash::make($data['password']),
+        'profile_photo' => $profilePhoto,
+        'id_card' => $idCard
+    ]);
+}
 
     protected function registered(Request $request, $user)
     {
