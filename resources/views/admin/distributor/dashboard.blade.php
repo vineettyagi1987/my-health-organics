@@ -21,7 +21,7 @@
 <option value="{{ $d->id }}"
 {{ $selectedDistributor == $d->id ? 'selected' : '' }}>
 
-{{ $d->name }}
+{{ $d->name.' '.'('.$d->dist_id.')' }}
 
 </option>
 

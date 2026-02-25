@@ -98,7 +98,7 @@ No Record Found
 
 
 <div class="d-flex justify-content-center">
-{{ $sales->links() }}
+{{ $sales->withQueryString()->links() }}
 </div>
 
 
