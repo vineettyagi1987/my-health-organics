@@ -6,9 +6,9 @@
 
     <!-- HERO -->
     <section class="position-relative text-center text-white rounded shadow overflow-hidden mb-5"
-        style="min-height:420px;
-        background:linear-gradient(rgba(25,135,84,.85),rgba(13,110,253,.85)),
-        url('https://images.unsplash.com/photo-1535914254981-b5012eebbd15') center/cover no-repeat;">
+    style="min-height:420px;
+    background:linear-gradient(rgba(25,135,84,.85),rgba(13,110,253,.85)),
+    url('{{ asset('images/banner.jpg') }}') center/cover no-repeat;">
 
         <div class="d-flex flex-column justify-content-center align-items-center h-100 p-4">
             <h1 class="display-4 fw-bold mb-3">Welcome to <strong>The Health Organics</strong></h1>
@@ -39,8 +39,8 @@ Despite our best intentions, it has become increasingly difficult to access pure
         </div>
 
         <div class="col-md-6 text-center">
-            <img src="https://images.unsplash.com/photo-1632082064140-7da23f93cf17"
-                 class="img-fluid rounded shadow" alt="">
+             <img src="{{ asset('images/plant.jpg') }}"
+         class="img-fluid rounded shadow">
         </div>
     </section>
 
@@ -144,7 +144,7 @@ Despite our best intentions, it has become increasingly difficult to access pure
         </div>
 
         <div class="col-md-6 order-md-1 text-center">
-            <img src="https://images.unsplash.com/photo-1535914254981-b5012eebbd15"
+            <img src="{{ asset('images/banner.jpg') }}"
                  class="img-fluid rounded shadow">
         </div>
     </section>
@@ -167,9 +167,9 @@ Despite our best intentions, it has become increasingly difficult to access pure
             <a href="{{ route('products.list') }}" class="btn btn-success mt-2">Explore Offerings</a>
         </div>
 
-        <div class="col-md-6 text-center">
-            <img src="https://images.unsplash.com/photo-1636386794940-507b0c899394"
-                 class="img-fluid rounded shadow">
+       <div class="col-md-6 text-center">
+            <img src="{{ asset('images/dashboard.jpg') }}"
+                class="img-fluid rounded shadow">
         </div>
     </section>
 
