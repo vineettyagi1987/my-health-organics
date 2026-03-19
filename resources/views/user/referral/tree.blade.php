@@ -50,6 +50,7 @@
 <th>Name</th>
 <th>Email</th>
 <th>Referral Code</th>
+<th>Member Create Date</th>
 </tr>
 
 @foreach($levelUsers as $u)
@@ -59,6 +60,7 @@
 <td>{{$u->name}}</td>
 <td>{{$u->email}}</td>
 <td>{{$u->my_referral_code}}</td>
+<td>{{$u->created_at->format('d M Y H:i')}}</td>
 
 </tr>
 

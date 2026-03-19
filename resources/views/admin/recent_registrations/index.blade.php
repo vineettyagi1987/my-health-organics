@@ -18,6 +18,7 @@
                 <th>Role</th>
                 <th>Status</th>
                 <th>Joined On</th>
+                <th>Referral Code</th>
                
             </tr>
         </thead>
@@ -38,8 +39,8 @@
                         {{ $user->status ? 'Active' : 'Inactive' }}
                     </span>
                 </td>
-                <td>{{ $user->created_at->format('d M Y') }}</td>
-
+                <td>{{ $user->created_at->format('d M Y H:i') }}</td>
+                <td>{{ $user->referral_code ?? '-' }}</td>
               
             </tr>
         @empty

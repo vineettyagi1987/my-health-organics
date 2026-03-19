@@ -64,6 +64,7 @@
 <th>User</th>
 <th>Email</th>
 <th>Referral Code</th>
+<th>Date Joined</th>
 <th>Membership</th>
 </tr>
 
@@ -76,7 +77,7 @@
 <td>{{$u->email}}</td>
 
 <td>{{$u->my_referral_code}}</td>
-
+<td>{{ $u->created_at->format('d M Y H:i') }}</td>
 <td>
 
 @if($u->activeSubscription)

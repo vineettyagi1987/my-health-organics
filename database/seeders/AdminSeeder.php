@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
         'name' => 'Admin',
         'email' => 'admin@test.com',
         'password' => bcrypt('password'),
-        'my_referral_code' => strtoupper(Str::random(8)),
+        'my_referral_code' => 'STN001',
         'role' => 'admin'
         ]);
 

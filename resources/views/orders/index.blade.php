@@ -11,6 +11,7 @@
                     <th>#</th>
                     <th>Order No</th>
                     <th>Total</th>
+                    <th>Date</th>
                     <th>Status</th>
                     <th width="100"></th>
                 </tr>
@@ -21,6 +22,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $order->order_number }}</td>
                     <td>₹{{ $order->total }}</td>
+                    <td>{{ $order->updated_at->format('d M Y H:i:s') }}</td>
                     <td>
                         <span class="badge 
                             @if($order->status == 'paid') bg-success

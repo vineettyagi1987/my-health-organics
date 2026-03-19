@@ -14,7 +14,7 @@
             <p><strong>Status:</strong> {{ ucfirst($order->status) }}</p>
             <p><strong>Payment Status:</strong> {{ ucfirst($order->payment_status) }}</p>
             <p><strong>Razorpay Payment ID:</strong> {{ $order->razorpay_order_id ?? '-' }}</p>
-            <p><strong>Date:</strong> {{ $order->created_at->format('d M Y, h:i A') }}</p>
+            <p><strong>Date:</strong> {{ $order->updated_at->format('d M Y, h:i A') }}</p>
         </div>
     </div>
       <!-- Customer Details -->

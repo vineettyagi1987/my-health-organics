@@ -48,6 +48,7 @@
             <th>Commission %</th>
             <th>Distributor ID</th>
             <th>Status</th>
+            <th>Created At</th>
             <th width="150">Action</th>
         </tr>
     </thead>
@@ -67,6 +68,8 @@
                     {{ $d->status ? 'Active':'Inactive' }}
                 </span>
             </td>
+            <td>{{ $d->created_at->format('d M Y H:i') }}</td>
+           
             <td>
                 <a href="{{ route('admin.distributors.edit',$d) }}" class="btn btn-sm btn-primary">Edit</a>
 

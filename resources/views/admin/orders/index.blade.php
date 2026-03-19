@@ -38,6 +38,7 @@
                 <th>Order No</th>
                 <th>Total</th>
                 <th>Status</th>
+                <th>Updated At</th>
                 <th></th>
             </tr>
         </thead>
@@ -50,6 +51,7 @@
     <td>{{ $order->order_number }}</td>
     <td>₹{{ $order->total }}</td>
     <td>{{ ucfirst($order->status) }}</td>
+    <td>{{ $order->updated_at->format('d M Y H:i') }}</td>
     <td>
         <a href="{{ route('admin.orders.show', $order->id) }}"
            class="btn btn-sm btn-primary">View</a>

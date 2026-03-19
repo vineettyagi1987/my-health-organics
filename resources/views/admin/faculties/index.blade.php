@@ -30,6 +30,7 @@
                 <th>Designation</th>
                 <th>Qualifications</th>
                 <th>Bio</th>
+                <th>Created At</th>
                 <th width="180">Action</th>
             </tr>
         </thead>
@@ -61,6 +62,7 @@
                 <td style="max-width:200px;">
                     {{ Str::limit($faculty->bio, 100) }}
                 </td>
+                <td>{{ $faculty->created_at->format('d M Y H:i') }}</td>
 
                 <td>
 

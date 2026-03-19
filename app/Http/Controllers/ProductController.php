@@ -12,23 +12,17 @@ class ProductController extends Controller
      */
 public function index(Request $request)
 {
-    $allowedCategories = [
-        'Family Care',
-        'Personal Care',
-        'Organic prducts',
-        'Aayurvedic Products',
-        'Home & Office Care',
-        'Agro Care',
-        'Vetorinary Care',
-        'Life Care'
-    ];
-
-    // Get only allowed categories for dropdown
-    $categories = Category::whereIn('name', $allowedCategories)->get();
+   // Get all categories except those containing specific keywords
+    $categories = Category::where('name', 'NOT LIKE', '%Plastic Free%')
+        ->where('name', 'NOT LIKE', '%Renewable Energy%')
+        ->get();
 
     $products = Product::where('status', 1)
-        ->whereHas('category', function ($query) use ($allowedCategories, $request) {
-            $query->whereIn('name', $allowedCategories);
+        ->whereHas('category', function ($query) use ($request) {
+
+            // Exclude unwanted categories
+            $query->where('name', 'NOT LIKE', '%Plastic Free%')
+                  ->where('name', 'NOT LIKE', '%Renewable Energy%');
 
             // If category selected from dropdown
             if ($request->category) {
@@ -44,17 +38,26 @@ public function index(Request $request)
 
 public function energyProducts(Request $request)
 {
-    $allowedCategories = [
-        'Renewalable Energy Products',
-        'Plastic Free Events'
+    $keywords = [
+        'Renewable Energy',
+        'Plastic Free'
     ];
 
-    // Get only allowed categories for dropdown
-    $categories = Category::whereIn('name', $allowedCategories)->get();
+    // Get categories that contain the keywords
+    $categories = Category::where(function ($query) use ($keywords) {
+        foreach ($keywords as $keyword) {
+            $query->orWhere('name', 'LIKE', "%{$keyword}%");
+        }
+    })->get();
 
     $products = Product::where('status', 1)
-        ->whereHas('category', function ($query) use ($allowedCategories, $request) {
-            $query->whereIn('name', $allowedCategories);
+        ->whereHas('category', function ($query) use ($keywords, $request) {
+
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $keyword) {
+                    $q->orWhere('name', 'LIKE', "%{$keyword}%");
+                }
+            });
 
             // If category selected from dropdown
             if ($request->category) {

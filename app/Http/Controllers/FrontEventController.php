@@ -79,23 +79,27 @@ class FrontEventController extends Controller
              return redirect()->route('my.bookings')
                ->with('success','Booked Free via Subscription');
         }
-
+       else {
+           
+            return redirect()->route('subscription.profile')
+                   ->with('error','Please activate your subscription to book this event for free');
+       }
         // Paid booking
-        $api = new Api(config('razorpay.key'), config('razorpay.secret'));
+        // $api = new Api(config('razorpay.key'), config('razorpay.secret'));
 
-        $order = $api->order->create([
-            'receipt'=>uniqid(),
-            'amount'=>$event->price * 100,
-            'currency'=>'INR'
-        ]);
+        // $order = $api->order->create([
+        //     'receipt'=>uniqid(),
+        //     'amount'=>$event->price * 100,
+        //     'currency'=>'INR'
+        // ]);
 
-        EventBooking::create([
-            'user_id'=>auth()->id(),
-            'event_id'=>$event->id,
-            'amount'=>$event->price,
-            'payment_id'=>$order['id'],
-            'status'=>'pending'
-        ]);
+        // EventBooking::create([
+        //     'user_id'=>auth()->id(),
+        //     'event_id'=>$event->id,
+        //     'amount'=>$event->price,
+        //     'payment_id'=>$order['id'],
+        //     'status'=>'pending'
+        // ]);
 
         return view('frontend.events.payment',compact('order','event'));
     }

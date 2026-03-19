@@ -69,12 +69,12 @@
                                 {{ \Carbon\Carbon::parse($event->event_date)->format('d M Y H:i') }}
                             </div>
 
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <strong>Price:</strong>
                                 <span class="text-success fw-bold fs-5">
                                     ₹{{ $event->price }}
                                 </span>
-                            </div>
+                            </div> -->
                             @if($event->status == 'active')
                                 <span class="badge bg-success">Active</span>
                                 @elseif($event->status == 'completed')

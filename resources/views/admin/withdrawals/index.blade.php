@@ -16,6 +16,7 @@
 <th>Email</th>
 <th>Amount</th>
 <th>Bank Details</th>
+<th>Date Requested</th>
 <th>Status</th>
 <th>Action</th>
 </tr>
@@ -52,7 +53,7 @@ No Bank Details
 @endif
 
 </td>
-
+<td>{{ $w->created_at->format('d M Y H:i') }}</td>
 
 <td>{{ ucfirst($w->status) }}</td>
 

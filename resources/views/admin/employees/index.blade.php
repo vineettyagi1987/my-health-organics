@@ -53,6 +53,7 @@
 <th>Company Role/Title</th>
 <th>Employee ID</th>
 <th>Status</th>
+<th>Created At</th>
 <th width="150">Action</th>
 </tr>
 </thead>
@@ -70,6 +71,7 @@
             {{ $employee->status ? 'Active' : 'Inactive' }}
         </span>
     </td>
+    <td>{{ $employee->created_at->format('d M Y H:i') }}</td>
     <td>
         <a href="{{ route('admin.employees.edit',$employee) }}" class="btn btn-sm btn-primary">Edit</a>
 
@@ -78,6 +80,7 @@
             <button onclick="return confirm('Delete employee?')" class="btn btn-sm btn-danger">Delete</button>
         </form>
     </td>
+  
 </tr>
 @empty
 <tr>

@@ -67,7 +67,7 @@ Add Bank Account
 <tr>
     <td>₹ {{ $r->amount }}</td>
     <td>{{ $r->status }}</td>
-    <td>{{ $r->created_at->format('d M Y') }}</td>
+    <td>{{ $r->created_at->format('d M Y H:i') }}</td>
 </tr>
 
 @empty

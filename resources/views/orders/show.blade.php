@@ -5,6 +5,7 @@
     <h2>Order Details</h2>
 
     <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
+    <p><strong>Date:</strong> {{ $order->updated_at->format('d M Y H:i:s') }}</p>
     <p><strong>Status:</strong> {{ ucfirst($order->status) }}</p>
         <!-- Customer Details -->
     <div class="card mb-4">

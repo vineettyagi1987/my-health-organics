@@ -12,6 +12,7 @@
 <th>Amount</th>
 <th>Type</th>
 <th>Source</th>
+<th>Date</th>
 </tr>
 
 @forelse($transactions as $t)
@@ -20,6 +21,7 @@
 <td>{{ $t->amount }}</td>
 <td>{{ $t->type }}</td>
 <td>{{ $t->source }}</td>
+<td>{{ $t->created_at->format('d M Y H:i') }}</td>
 </tr>
 
 @empty
