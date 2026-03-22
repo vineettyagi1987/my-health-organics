@@ -12,7 +12,7 @@
     @foreach($users as $user)
 
     <option value="{{$user->id}}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
-    {{$user->name.'('.$user->email.') ('.$user->my_referral_code.')'}}
+    {{$user->name.'('.$user->phone.') ('.$user->my_referral_code.')'}}
     </option>
 
     @endforeach
@@ -63,6 +63,7 @@
 <tr>
 <th>User</th>
 <th>Email</th>
+<th>Phone</th>
 <th>Referral Code</th>
 <th>Date Joined</th>
 <th>Membership</th>
@@ -75,7 +76,7 @@
 <td>{{$u->name}}</td>
 
 <td>{{$u->email}}</td>
-
+<td>{{$u->phone}}</td>
 <td>{{$u->my_referral_code}}</td>
 <td>{{ $u->created_at->format('d M Y H:i') }}</td>
 <td>

@@ -18,7 +18,7 @@
 @foreach($employees as $emp)
 
 <option value="{{ $emp->id }}">
-{{ $emp->name }}
+{{ $emp->name.' ('.$emp->phone.')' }}
 </option>
 
 @endforeach

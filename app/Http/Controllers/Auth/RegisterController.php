@@ -53,13 +53,19 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $data['phone'] = ltrim($data['phone'], '0');
+       return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['required', 'string', 'max:15'],
+
+            // Email optional + unique
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email'],
+
+            // Phone required + integer + unique
+            'phone' => ['required', 'numeric', 'digits_between:10,15', 'unique:users,phone'],
+
             'referral_code' => ['required', 'exists:users,my_referral_code'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'profile_photo' => ['required','image','mimes:jpg,jpeg,png','max:2048'],
+            'profile_photo' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ]);
     }
 

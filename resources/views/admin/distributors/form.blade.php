@@ -7,14 +7,28 @@
 <div class="mb-3">
     <label>Email</label>
     <input type="email" name="email" class="form-control"
-           value="{{ old('email', $distributor->email ?? '') }}" required>
+           value="{{ old('email', $distributor->email ?? '') }}">
 </div>
 
 <div class="mb-3">
-    <label>Phone</label>
-    <input type="text" name="phone" class="form-control"
-           value="{{ old('phone', $distributor->phone ?? '') }}" required>
+<label>Phone</label>
+<input type="text" name="phone"
+class="form-control @error('phone') is-invalid @enderror"
+value="{{ old('phone', $distributor->phone ?? '') }}"
+required
+inputmode="numeric"
+pattern="[0-9]*"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+@error('phone')
+<span class="invalid-feedback d-block">
+    <strong>{{ $message }}</strong>
+</span>
+@enderror
+
+<small class="text-muted">Enter numeric mobile number only</small>
 </div>
+
 <div class="mb-3">
     <label>Region / Area</label>
     <input type="text" name="region_area" class="form-control"

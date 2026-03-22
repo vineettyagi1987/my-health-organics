@@ -35,18 +35,20 @@
                  <th>#</th>
         <th>User</th>
         <th>Email</th>
+         <th>Phone</th>
         <th>Status</th>
         <th>Start</th>
         <th>End</th>
         <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody> 
         @forelse($subscriptions as $sub)
            <tr>
     <td>{{ $loop->iteration }}</td>
     <td>{{ $sub->user->name ?? '-' }}</td>
     <td>{{ $sub->user->email ?? '-' }}</td>
+    <td>{{ $sub->user->phone ?? '-' }}</td>
     <td>{{ ucfirst($sub->status) }}</td>
     <td>{{ $sub->start_date ?? '-' }}</td>
     <td>{{ $sub->end_date ?? '-' }}</td>
@@ -57,7 +59,7 @@
 </tr>
         @empty
             <tr>
-                <td colspan="6" class="text-center">No subscriptions found</td>
+                <td colspan="7" class="text-center">No subscriptions found</td>
             </tr>
         @endforelse
         </tbody>

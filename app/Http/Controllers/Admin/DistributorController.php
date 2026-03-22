@@ -50,10 +50,19 @@ class DistributorController extends Controller
      */
     public function store(Request $request)
     {
+            $request->merge([
+        'phone' => ltrim(preg_replace('/\D/', '', $request->phone), '0')
+    ]);
+
         $data = $request->validate([
             'name'     => ['required','string','max:255'],
-            'email'    => ['required','email','max:255','unique:users,email'],
-            'phone'    => ['required','string','max:20'],
+            'email'    => ['nullable','email','max:255','unique:users,email'],
+            'phone' => [
+                    'required',
+                    'regex:/^[0-9]+$/',        // only digits
+                    'digits_between:10,15',
+                    'unique:users,phone'
+                ],
             'password' => ['required','string','min:6'],
             'status'   => ['required','boolean'],
              'region_area'     => ['nullable','string','max:255'],
@@ -88,11 +97,19 @@ class DistributorController extends Controller
     {
         $distributor = User::where('role', User::ROLE_DISTRIBUTOR)
             ->findOrFail($id);
+            $request->merge([
+        'phone' => ltrim(preg_replace('/\D/', '', $request->phone), '0')
+    ]);
 
         $data = $request->validate([
             'name'     => ['required','string','max:255'],
-            'email'    => ['required','email','max:255','unique:users,email,' . $distributor->id],
-            'phone'    => ['required','string','max:20'],
+            'email'    => ['nullable','email','max:255','unique:users,email,' . $distributor->id],
+            'phone' => [
+                    'required',
+                    'regex:/^[0-9]+$/',        // only digits
+                    'digits_between:10,15',
+                    'unique:users,phone,' . $distributor->id
+                ],
             'password' => ['nullable','string','min:6'],
             'status'   => ['required','boolean'],
             'region_area'     => ['nullable','string','max:255'],

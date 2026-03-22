@@ -35,6 +35,7 @@
                <th>#</th>
                 <th>User</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>Order No</th>
                 <th>Total</th>
                 <th>Status</th>
@@ -48,6 +49,7 @@
     <td>{{ $loop->iteration }}</td>
     <td>{{ $order->user->name ?? '-' }}</td>
     <td>{{ $order->user->email ?? '-' }}</td>
+    <td>{{ $order->user->phone ?? '-' }}</td>
     <td>{{ $order->order_number }}</td>
     <td>₹{{ $order->total }}</td>
     <td>{{ ucfirst($order->status) }}</td>
@@ -59,7 +61,7 @@
 </tr>
         @empty
             <tr>
-                <td colspan="6" class="text-center">No orders found</td>
+                <td colspan="9" class="text-center">No orders found</td>
             </tr>
         @endforelse
         </tbody>

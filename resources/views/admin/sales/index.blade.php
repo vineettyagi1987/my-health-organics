@@ -24,7 +24,7 @@
 <option value="{{ $emp->id }}"
 {{ request('employee_id') == $emp->id ? 'selected' : '' }}>
 
-{{ $emp->name.'('.$emp->emp_id.')' }}
+{{ $emp->name.'('.$emp->phone.')' }}
 
 </option>
 
@@ -71,7 +71,7 @@ Total Collection : ₹ {{ $totalCollection }}
 
 <tr>
 
-<td>{{ $sale->user->name.'('.$sale->user->emp_id.')' }}</td>
+<td>{{ $sale->user->name.'('.$sale->user->phone.')' }}</td>
 
 <td>{{ $sale->sale_date }}</td>
 

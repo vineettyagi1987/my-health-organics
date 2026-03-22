@@ -36,20 +36,38 @@
 
 <div class="mb-3">
 <label>Name</label>
-<input type="text" name="name" class="form-control"
+<input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
 value="{{ old('name', $user->name) }}" required>
+
+@error('name')
+<span class="invalid-feedback d-block">
+    <strong>{{ $message }}</strong>
+</span>
+@enderror
 </div>
 
 <div class="mb-3">
 <label>Email</label>
-<input type="email" class="form-control"
-value="{{ $user->email }}" disabled>
+<input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+value="{{ old('email', $user->email) }}">
+
+@error('email')
+<span class="invalid-feedback d-block">
+    <strong>{{ $message }}</strong>
+</span>
+@enderror
 </div>
 
 <div class="mb-3">
 <label>Phone</label>
-<input type="text" name="phone" class="form-control"
-value="{{ old('phone', $user->phone) }}" required>
+<input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+value="{{ old('phone', $user->phone) }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+@error('phone')
+<span class="invalid-feedback d-block">
+    <strong>{{ $message }}</strong>
+</span>
+@enderror
 </div>
 
 <button class="btn btn-success">Update Profile</button>

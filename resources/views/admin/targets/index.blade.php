@@ -21,7 +21,7 @@ Add Target
 @forelse($targets as $t)
 
 <tr>
-<td>{{ $t->user->name }}</td>
+<td>{{ $t->user->name.' ('.$t->user->phone.')' }}</td>
 <td>₹ {{ $t->weekly_target }}</td>
 
 <td>

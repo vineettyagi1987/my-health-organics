@@ -14,6 +14,7 @@
 <tr>
 <th>User</th>
 <th>Email</th>
+<th>Phone</th>
 <th>Amount</th>
 <th>Bank Details</th>
 <th>Date Requested</th>
@@ -28,6 +29,7 @@
 <td>{{ $w->user->name }}</td>
 
 <td>{{ $w->user->email }}</td>
+<td>{{ $w->user->phone }}</td>
 
 <td>₹ {{ $w->amount }}</td>
 

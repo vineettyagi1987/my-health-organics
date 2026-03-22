@@ -8,14 +8,27 @@ value="{{ old('name', $employee->name ?? '') }}" required>
 <div class="mb-3">
 <label>Email</label>
 <input type="email" name="email" class="form-control"
-value="{{ old('email', $employee->email ?? '') }}" required>
+value="{{ old('email', $employee->email ?? '') }}" >
 </div>
 
 
 <div class="mb-3">
 <label>Phone</label>
-<input type="text" name="phone" class="form-control"
-value="{{ old('phone', $employee->phone ?? '') }}" required>
+<input type="text" name="phone"
+class="form-control @error('phone') is-invalid @enderror"
+value="{{ old('phone', $employee->phone ?? '') }}"
+required
+inputmode="numeric"
+pattern="[0-9]*"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+@error('phone')
+<span class="invalid-feedback d-block">
+    <strong>{{ $message }}</strong>
+</span>
+@enderror
+
+<small class="text-muted">Enter numeric mobile number only</small>
 </div>
 
 <div class="mb-3">

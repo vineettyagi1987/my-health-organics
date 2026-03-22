@@ -19,7 +19,7 @@
                 <th>Status</th>
                 <th>Joined On</th>
                 <th>Referral Code</th>
-               
+                <th>My Referral Code</th>
             </tr>
         </thead>
 
@@ -41,6 +41,7 @@
                 </td>
                 <td>{{ $user->created_at->format('d M Y H:i') }}</td>
                 <td>{{ $user->referral_code ?? '-' }}</td>
+                <td>{{ $user->my_referral_code ?? '-' }}</td>
               
             </tr>
         @empty
