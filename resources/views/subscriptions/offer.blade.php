@@ -4,7 +4,7 @@
 <div class="container py-5 text-center">
 
     <h2 class="mb-3">Become a Premium Member</h2>
-    <p class="text-muted">Pay ₹500 for 1-year membership benefits.</p>
+    <p class="text-muted">Pay ₹500 for 2-years membership benefits.</p>
 
     <form method="POST" action="{{ route('membership.subscribe') }}">
         @csrf

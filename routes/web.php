@@ -256,7 +256,9 @@ Route::prefix('distributor')->middleware(['auth'])->group(function(){
         ->name('distributor.sale.update');
 
 });
-    
+Route::get('/about-us', function () {
+    return view('about-us');
+})->name('about.us');
 
 
 

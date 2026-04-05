@@ -19,7 +19,7 @@
         <ul class="list-unstyled small">
           <li><a href="{{ route('products.list') }}" class="text-muted text-decoration-none d-block mb-2">Products</a></li>
           <li><a href="{{ route('benefits') }}" class="text-muted text-decoration-none d-block mb-2">Membership</a></li>
-          <li><a href="{{ route('home') }}" class="text-muted text-decoration-none d-block mb-2">About Us</a></li>
+          <li><a href="{{ route('about.us') }}" class="text-muted text-decoration-none d-block mb-2">About Us</a></li>
           <li><a href="{{ route('contact') }}" class="text-muted text-decoration-none d-block">Contact Us</a></li>
         </ul>
       </div>

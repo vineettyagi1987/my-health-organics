@@ -1,206 +1,192 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\OrderItem;
+use App\Models\Refund;
+use App\Models\Subscription;
 use DB;
 use Razorpay\Api\Api;
 use Razorpay\Api\Errors\SignatureVerificationError;
-use App\Models\Refund;
-use App\Models\Subscription;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class RazorpayController extends Controller
 {
-    public function payment(Request $request)
+    public function webhook(Request $request)
     {
-       
-        $order = Order::where('razorpay_order_id',$request->razorpay_order_id)->firstOrFail();
+        $payload   = $request->getContent();
+        $signature = $request->header('X-Razorpay-Signature');
 
-        $api = new Api(config('razorpay.key'), config('razorpay.secret'));
+        try {
+            $api = new Api(config('razorpay.key'), config('razorpay.secret'));
 
-        $api->utility->verifyPaymentSignature([
-            'razorpay_order_id'=>$request->razorpay_order_id,
-            'razorpay_payment_id'=>$request->razorpay_payment_id,
-            'razorpay_signature'=>$request->razorpay_signature,
-        ]);
+            $api->utility->verifyWebhookSignature(
+                $payload,
+                $signature,
+                config('razorpay.webhook_secret')
+            );
 
-        DB::transaction(function () use ($order,$request) {
+        } catch (SignatureVerificationError $e) {
+            Log::error('Razorpay Webhook Signature Failed');
+            return response()->json(['status' => 'invalid signature'], 400);
+        }
 
-            $order->update([
-                'status'=>'paid',
-                'payment_status'=>'paid',
-                'razorpay_payment_id'=>$request->razorpay_payment_id
-            ]);
+        $data  = json_decode($payload, true);
+        $event = $data['event'] ?? null;
 
-            /** reduce stock **/
-            foreach ($order->items as $item) {
-                $item->product->decrement('stock', $item->quantity);
-            }
+        Log::info('Razorpay Webhook Event: ' . $event);
 
-            /** clear cart **/
-            getCart()->items()->delete();
-        });
+        switch ($event) {
 
-        return redirect('/orders/'.$order->id)->with('success','Payment successful');
-    }
+            /** ================= PAYMENT CAPTURED ================= */
+            case 'payment.captured':
 
-  public function webhook(Request $request)
-{
-    $payload   = $request->getContent();
-    $signature = $request->header('X-Razorpay-Signature');
+                $payment = $data['payload']['payment']['entity'];
 
-    try {
-        $api = new Api(config('razorpay.key'), config('razorpay.secret'));
+                DB::transaction(function () use ($payment) {
 
-        $api->utility->verifyWebhookSignature(
-            $payload,
-            $signature,
-            config('razorpay.webhook_secret')
-        );
-    } catch (SignatureVerificationError $e) {
-        Log::error('Razorpay Webhook Signature Failed');
-        return response()->json(['status' => 'invalid signature'], 400);
-    }
+                    $order = Order::where('razorpay_payment_id', $payment['id'])
+                        ->orWhere('razorpay_order_id', $payment['order_id'])
+                        ->first();
 
-    $data  = json_decode($payload, true);
-    $event = $data['event'] ?? null;
+                    if ($order && $order->payment_status !== 'paid') {
 
-    Log::info('Razorpay Webhook Event: ' . $event);
-    
-    switch ($event) {
-        
-        /** ================= PAYMENT CAPTURED ================= */
-        case 'payment.captured':
+                        $order->update([
+                            'status' => 'paid',
+                            'payment_status' => 'paid',
+                            'razorpay_payment_id' => $payment['id'],
+                        ]);
 
-            $payment = $data['payload']['payment']['entity'];
+                        foreach ($order->items as $item) {
+                            $item->product->decrement('stock', $item->quantity);
+                        }
+                    }
+                });
 
-            DB::transaction(function () use ($payment) {
+                break;
 
-                $order = Order::where('razorpay_payment_id', $payment['id'])
-                    ->orWhere('razorpay_order_id', $payment['order_id'])
-                    ->first();
+            /** ================= PAYMENT FAILED ================= */
+            case 'payment.failed':
 
-                if ($order && $order->payment_status !== 'paid') {
+                $payment = $data['payload']['payment']['entity'];
 
-                    $order->update([
-                        'status' => 'paid',
-                        'payment_status' => 'paid',
-                        'razorpay_payment_id' => $payment['id'],
+                Order::where('razorpay_order_id', $payment['order_id'])
+                    ->update([
+                        'status' => 'failed',
+                        'payment_status' => 'failed',
                     ]);
 
-                    foreach ($order->items as $item) {
-                        $item->product->decrement('stock', $item->quantity);
-                    }
+                break;
+
+            /** ================= REFUND ================= */
+            case 'refund.processed':
+
+                $refund = $data['payload']['refund']['entity'];
+
+                $order = Order::where('razorpay_payment_id', $refund['payment_id'])->first();
+
+                if ($order) {
+
+                    Refund::updateOrCreate(
+                        ['razorpay_refund_id' => $refund['id']],
+                        [
+                            'order_id' => $order->id,
+                            'amount'   => $refund['amount'] / 100,
+                            'status'   => 'processed',
+                        ]
+                    );
+
+                    $order->update([
+                        'status' => 'refunded',
+                        'payment_status' => 'refunded',
+                    ]);
                 }
-            });
 
-            break;
+                break;
 
+            /** ================= SUBSCRIPTION ACTIVATED ================= */
+            case 'subscription.activated':
 
-        /** ================= PAYMENT FAILED ================= */
-        case 'payment.failed':
+                $sub = $data['payload']['subscription']['entity'];
 
-            $payment = $data['payload']['payment']['entity'];
+                // ✅ Start Date from Razorpay
+                $startAt = isset($sub['start_at'])
+                    ? Carbon::createFromTimestamp($sub['start_at'])
+                    : now();
 
-            Order::where('razorpay_order_id', $payment['order_id'])
-                ->update([
-                    'status' => 'failed',
-                    'payment_status' => 'failed',
-                ]);
+                // ✅ ALWAYS calculate end date yourself (2 YEARS)
+                $endAt = $startAt->copy()->addYears(2);
 
-            break;
+                Subscription::where('razorpay_subscription_id', $sub['id'])
+                    ->update([
+                        'status'     => 'active',
+                        'start_date' => $startAt,
+                        'end_date'   => $endAt,
+                    ]);
 
+                break;
 
-        /** ================= REFUND PROCESSED ================= */
-        case 'refund.processed':
+            /** ================= SUBSCRIPTION RENEWAL ================= */
+            case 'subscription.charged':
 
-            $refund = $data['payload']['refund']['entity'];
+                $sub = $data['payload']['subscription']['entity'];
 
-            $order = Order::where('razorpay_payment_id', $refund['payment_id'])->first();
+                $subscription = Subscription::where('razorpay_subscription_id', $sub['id'])->first();
 
-            if ($order) {
+                if ($subscription) {
 
-                Refund::updateOrCreate(
-                    ['razorpay_refund_id' => $refund['id']],
-                    [
-                        'order_id' => $order->id,
-                        'amount'   => $refund['amount'] / 100,
-                        'status'   => 'processed',
-                    ]
-                );
+                    // ✅ Extend from existing expiry if active
+                    if ($subscription->end_date && $subscription->end_date > now()) {
+                        $newEndDate = $subscription->end_date->copy()->addYears(2);
+                    } else {
+                        $newEndDate = now()->addYears(2);
+                    }
 
-                $order->update([
-                    'status' => 'refunded',
-                    'payment_status' => 'refunded',
-                ]);
-            }
+                    $subscription->update([
+                        'status'   => 'active',
+                        'end_date' => $newEndDate,
+                    ]);
+                }
 
-            break;
+                break;
 
+            /** ================= SUBSCRIPTION COMPLETED ================= */
+            case 'subscription.completed':
 
-        /** ================= SUBSCRIPTION ACTIVATED ================= */
-        case 'subscription.activated':
+                // $sub = $data['payload']['subscription']['entity'];
 
-            $sub = $data['payload']['subscription']['entity'];
+                // $endAt = isset($sub['ended_at'])
+                //     ? Carbon::createFromTimestamp($sub['ended_at'])
+                //     : now();
 
-            Subscription::where('razorpay_subscription_id', $sub['id'])
-                ->update([
-                    'status'     => 'active',
-                    'start_date' => now(),
-                    'end_date'   => now()->addYear(),
-                ]);
+                // Subscription::where('razorpay_subscription_id', $sub['id'])
+                //     ->update([
+                //         'status'   => 'completed',
+                //         'end_date' => $endAt,
+                //     ]);
 
-            break;
+                break;
 
+            /** ================= SUBSCRIPTION CANCELLED ================= */
+            case 'subscription.cancelled':
 
-        /** ================= SUBSCRIPTION CHARGED (RENEWAL) ================= */
-        case 'subscription.charged':
+                $sub = $data['payload']['subscription']['entity'];
 
-            $sub = $data['payload']['subscription']['entity'];
+                $endAt = isset($sub['ended_at'])
+                    ? Carbon::createFromTimestamp($sub['ended_at'])
+                    : now();
 
-            $subscription = Subscription::where('razorpay_subscription_id', $sub['id'])->first();
+                Subscription::where('razorpay_subscription_id', $sub['id'])
+                    ->update([
+                        'status'   => 'cancelled',
+                        'end_date' => $endAt,
+                    ]);
 
-            if ($subscription) {
-                $subscription->update([
-                    'status'   => 'active',
-                    'end_date' => now()->addYear(),
-                ]);
-            }
+                break;
+        }
 
-            break;
-
-
-        /** ================= SUBSCRIPTION COMPLETED ================= */
-        case 'subscription.completed':
-
-            $sub = $data['payload']['subscription']['entity'];
-
-            Subscription::where('razorpay_subscription_id', $sub['id'])
-                ->update([
-                    'status'   => 'completed',
-                    'end_date' => now(),
-                ]);
-
-            break;
-
-
-        /** ================= SUBSCRIPTION CANCELLED ================= */
-        case 'subscription.cancelled':
-
-            $sub = $data['payload']['subscription']['entity'];
-
-            Subscription::where('razorpay_subscription_id', $sub['id'])
-                ->update([
-                    'status'   => 'cancelled',
-                    'end_date' => now(),
-                ]);
-
-            break;
+        return response()->json(['status' => 'success']);
     }
-
-    return response()->json(['status' => 'success']);
-}
-
 }

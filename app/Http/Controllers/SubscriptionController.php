@@ -94,10 +94,42 @@ class SubscriptionController extends Controller
         ]);
     }
 
+// public function cancel($id)
+// {
+//     $subscription = Subscription::where('user_id', auth()->id())
+//         ->findOrFail($id);
+
+//     $api = new Api(config('razorpay.key'), config('razorpay.secret'));
+
+//     try {
+
+//         $rzpSub = $api->subscription->fetch($subscription->razorpay_subscription_id);
+
+//         if ($rzpSub['status'] !== 'active') {
+//             return back()->with('warning', 'Subscription can not cancel currently. Please check later.');
+//         }
+
+//         $api->subscription->cancel($subscription->razorpay_subscription_id);
+
+//         // DO NOT update DB manually
+//         // Webhook will update status automatically
+
+//         return back()->with('success', 'Subscription cancellation requested.');
+
+//     } catch (\Exception $e) {
+//         return back()->with('error', $e->getMessage());
+//     }
+// }
+
 public function cancel($id)
 {
     $subscription = Subscription::where('user_id', auth()->id())
         ->findOrFail($id);
+
+    // ✅ Prevent repeat cancel
+    if ($subscription->status === 'cancelled') {
+        return back()->with('info', 'Subscription already cancelled.');
+    }
 
     $api = new Api(config('razorpay.key'), config('razorpay.secret'));
 
@@ -105,18 +137,37 @@ public function cancel($id)
 
         $rzpSub = $api->subscription->fetch($subscription->razorpay_subscription_id);
 
-        if ($rzpSub['status'] !== 'active') {
-            return back()->with('warning', 'Subscription can not cancel currently. Please check later.');
+        // ✅ Allow valid statuses
+        if (!in_array($rzpSub['status'], ['active', 'authenticated', 'created'])) {
+
+            // sync DB just in case
+            $subscription->update(['status' => 'cancelled']);
+
+            return back()->with('warning', 'Subscription already inactive.');
         }
 
-        $api->subscription->cancel($subscription->razorpay_subscription_id);
+        // ✅ Cancel immediately
+        $api->subscription->cancel($subscription->razorpay_subscription_id, [
+            'cancel_at_cycle_end' => 0
+        ]);
 
-        // DO NOT update DB manually
-        // Webhook will update status automatically
+        // ✅ Update DB
+        $subscription->update([
+            'status' => 'cancelled'
+        ]);
 
-        return back()->with('success', 'Subscription cancellation requested.');
+        return back()->with('success', 'Auto-debit cancelled. No future charges will be made.');
 
     } catch (\Exception $e) {
+
+        \Log::error('Cancel Subscription Error: '.$e->getMessage());
+
+        // ✅ Handle already cancelled case
+        if (str_contains($e->getMessage(), 'already cancelled')) {
+            $subscription->update(['status' => 'cancelled']);
+            return back()->with('info', 'Subscription already cancelled.');
+        }
+
         return back()->with('error', $e->getMessage());
     }
 }

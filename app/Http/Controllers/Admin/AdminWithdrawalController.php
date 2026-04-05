@@ -28,7 +28,7 @@ public function approve($id)
 
     $user = $withdraw->user;
 
-    $user->wallet->decrement('balance',$withdraw->amount);
+    //$user->wallet->decrement('balance',$withdraw->amount);
 
     $withdraw->update([
     'status'=>'approved'

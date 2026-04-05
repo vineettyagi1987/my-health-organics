@@ -4,7 +4,7 @@
 var options = {
     key: "{{ config('razorpay.key') }}",
     subscription_id: "{{ $subscription_id }}",
-    name: "1 Year Membership",
+    name: "2 Years Membership",
     description: "₹500 Premium Plan",
 
     handler: function () {

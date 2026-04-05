@@ -12,11 +12,29 @@ public static function credit($userId,$amount,$source,$referenceId=null)
     $exists = WalletTransaction::where('user_id',$userId)
         ->where('source',$source)
         ->where('reference_id',$referenceId)
+        ->where('amount',$amount)
         ->exists();
 
     if($exists){
         return;
     }
+
+    $wallet = Wallet::firstOrCreate(['user_id'=>$userId]);
+
+    $wallet->increment('balance',$amount);
+
+    WalletTransaction::create([
+        'user_id'=>$userId,
+        'wallet_id'=>$wallet->id,
+        'amount'=>$amount,
+        'type'=>'credit',
+        'source'=>$source,
+        'reference_id'=>$referenceId
+    ]);
+
+}
+public static function creditDifference($userId,$amount,$source,$referenceId=null)
+{
 
     $wallet = Wallet::firstOrCreate(['user_id'=>$userId]);
 

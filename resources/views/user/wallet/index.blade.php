@@ -34,6 +34,8 @@
 
 </table>
 
+{{ $transactions->links() }}
 </div>
+
 
 @endsection

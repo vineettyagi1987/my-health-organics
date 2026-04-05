@@ -6,7 +6,13 @@
         <li class="nav-item">
             <a class="nav-link {{ Route::is('home') ? 'active fw-bold text-success' : '' }}"
                href="{{ route('home') }}">
-               <i class="bi bi-house me-2"></i> Home/About Us
+               <i class="bi bi-house me-2"></i> Home
+            </a>
+        </li>
+         <li class="nav-item">
+            <a class="nav-link {{ Route::is('about.us') ? 'active fw-bold text-success' : '' }}"
+               href="{{ route('about.us') }}">
+              <i class="bi bi-person-circle me-2"></i> About Us
             </a>
         </li>
 

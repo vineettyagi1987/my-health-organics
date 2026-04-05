@@ -46,30 +46,65 @@ class SubscriptionController extends Controller
     }
 
     /** Admin cancel subscription */
-    public function cancel($id)
-    {
-        $subscription = Subscription::findOrFail($id);
+    // public function cancel($id)
+    // {
+    //     $subscription = Subscription::findOrFail($id);
 
-        try {
-            $api = new Api(config('razorpay.key'), config('razorpay.secret'));
+    //     try {
+    //         $api = new Api(config('razorpay.key'), config('razorpay.secret'));
 
-            $rzpSub = $api->subscription->fetch($subscription->razorpay_subscription_id);
+    //         $rzpSub = $api->subscription->fetch($subscription->razorpay_subscription_id);
            
-            if ($rzpSub['status'] === 'active') {
+    //         if ($rzpSub['status'] === 'active') {
               
-                $rzpSub->cancel();
-            }
+    //             $rzpSub->cancel();
+    //         }
 
-            $subscription->update([
-                'status' => 'cancelled',
-                'end_date' => now(),
+    //         $subscription->update([
+    //             'status' => 'cancelled',
+    //             'end_date' => now(),
+    //         ]);
+
+    //         return back()->with('success', 'Subscription cancelled successfully.');
+
+    //     } catch (\Exception $e) {
+    //         return back()->with('error', 'Unable to cancel subscription.');
+    //     }
+    // }
+
+public function cancel($id)
+{
+    $subscription = Subscription::findOrFail($id);
+
+    try {
+        $api = new Api(config('razorpay.key'), config('razorpay.secret'));
+
+        $rzpSub = $api->subscription->fetch($subscription->razorpay_subscription_id);
+
+        // ✅ Allow all valid statuses (important for eMandate)
+        if (in_array($rzpSub['status'], ['active', 'authenticated', 'created'])) {
+
+            // ✅ Proper cancel API call
+            $api->subscription->cancel($subscription->razorpay_subscription_id, [
+                'cancel_at_cycle_end' => 0 // immediate cancel
             ]);
-
-            return back()->with('success', 'Subscription cancelled successfully.');
-
-        } catch (\Exception $e) {
-            return back()->with('error', 'Unable to cancel subscription.');
         }
+
+        // ✅ DO NOT cut user access immediately
+        // Only stop future billing
+        $subscription->update([
+            'status' => 'cancelled',
+            // keep existing end_date (important)
+        ]);
+
+        return back()->with('success', 'Subscription cancelled (auto-debit stopped).');
+
+    } catch (\Exception $e) {
+
+        \Log::error('Admin Cancel Error: '.$e->getMessage());
+
+        return back()->with('error', $e->getMessage());
     }
+}
 }
 
