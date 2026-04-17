@@ -57,6 +57,23 @@ class ReferralService
             // Wallet Logic
             $this->handleWallet($user, $commission, $level);
         }
+        if(isset($commissionData[1])){
+
+                $level1Users = $commissionData[1]['users'];
+
+                if($level1Users >= 5){
+
+                $bonusBase = 5 * 500;
+
+                $bonus = ($bonusBase * 2)/100;
+
+                $commissionData[1]['bonus'] = $bonus;
+
+                // $totalCommission += $bonus;
+
+                }
+
+            }
 
         return [
             'levels'=>$commissionData,
@@ -99,4 +116,34 @@ class ReferralService
             );
         }
     }
+
+    // ading extra functions
+    public function buildTree($rootCode, $maxLevel = 10)
+{
+    return $this->getChildren($rootCode, 1, $maxLevel);
+}
+
+private function getChildren($code, $level, $maxLevel)
+{
+    if ($level > $maxLevel) return [];
+
+    $users = User::where('referral_code', $code)
+        ->whereHas('activeSubscription')
+        ->get();
+
+    $tree = [];
+
+    foreach ($users as $user) {
+        $tree[] = [
+            'user' => $user,
+            'children' => $this->getChildren(
+                $user->my_referral_code,
+                $level + 1,
+                $maxLevel
+            )
+        ];
+    }
+
+    return $tree;
+}
 }

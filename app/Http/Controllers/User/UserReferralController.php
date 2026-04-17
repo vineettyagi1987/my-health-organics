@@ -27,12 +27,61 @@ public function index(ReferralService $referralService)
     $commissionSummary = [];
 
     if(!empty($levels)){
-   // $commissionSummary = $this->calculateLevelCommission($levels);
     $commissionSummary = $referralService->calculateLevelCommission($levels, $user);
     }
+    //print_r($commissionSummary);die;
+    $tree = $referralService->buildTree($user->my_referral_code);
+     $chartData = $this->formatTreeForChart($tree, $user);
+    return view('user.referral.tree',compact('levels','commissionSummary','tree', 'chartData'));
 
-    return view('user.referral.tree',compact('levels','commissionSummary'));
+}
 
+/**
+ * Convert tree to OrgChart format
+ */
+private function formatTreeForChart($tree, $rootUser)
+{
+    $nodes = [];
+
+    $nodes[] = [
+        'id' => $rootUser->id,
+        'name' => $rootUser->name,
+        'img' => $rootUser->profile_photo ?? asset('default-user.png'),
+       
+        'tags' => ['level0']
+    ];
+
+    $this->buildChartNodes($tree, $rootUser->id, $nodes, 1);
+
+    return $nodes;
+}
+
+private function buildChartNodes($tree, $parentId, &$nodes, $level)
+{
+    foreach ($tree as $node) {
+
+        $user = $node['user'];
+
+        $nodes[] = [
+            'id' => $user->id,
+            'pid' => $parentId,
+            'name' => $user->name,
+            'phone' => $user->phone,
+            'my_referral_code' => $user->my_referral_code,
+             'img' => $user->profile_photo ?? asset('default-user.png'),
+    
+            'tags' => ['level'.$level]
+        ];
+
+        if (!empty($node['children'])) {
+            $this->buildChartNodes(
+                $node['children'],
+                $user->id,
+                $nodes,
+                $level + 1
+            );
+        }
+    }
 }
 
 }

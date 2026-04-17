@@ -7,7 +7,15 @@
         <h1 class="fw-bold">Contact Us</h1>
         <p class="text-muted">We would love to hear from you.</p>
     </div>
-
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     @if(session('success'))
         <div class="alert alert-success text-center">
             {{ session('success') }}
@@ -36,7 +44,10 @@
                             <label class="form-label">Email Address</label>
                             <input type="email" name="email" class="form-control" required>
                         </div>
-
+                        <div class="mb-3">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="text" name="mobile_number" class="form-control" required>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Subject</label>
                             <input type="text" name="subject" class="form-control" required>
