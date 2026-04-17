@@ -22,6 +22,7 @@ class ContactController extends Controller
         'email' => 'required|email',
         'subject' => 'required',
         'message' => 'required',
+        'mobile_number'  => ['required', 'string', 'min:10', 'regex:/^[0-9+\s]+$/'],
     ]);
       try {
 
