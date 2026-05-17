@@ -160,7 +160,16 @@ Route::post('/cart/remove', [CartController::class, 'remove']);
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+ Route::get('/membership-offer', [SubscriptionController::class, 'offer'])
+        ->name('membership.offer');
 
+    Route::post('/membership-subscribe', [SubscriptionController::class, 'subscribe'])
+        ->name('membership.subscribe');
+        Route::post('/payment-success', [SubscriptionController::class, 'paymentSuccess'])
+    ->name('payment.success');
+
+Route::get('/payment-failed', [SubscriptionController::class, 'paymentFailed'])
+    ->name('payment.failed');
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
@@ -176,11 +185,7 @@ Route::middleware('auth')->group(function () {
    
     // User Registration subscriptions
 
-     Route::get('/membership-offer', [SubscriptionController::class, 'offer'])
-        ->name('membership.offer');
-
-    Route::post('/membership-subscribe', [SubscriptionController::class, 'subscribe'])
-        ->name('membership.subscribe');
+    
 
     Route::post('/membership-skip', [SubscriptionController::class, 'skip'])
         ->name('membership.skip');
@@ -208,11 +213,11 @@ Route::middleware('auth')->group(function () {
         
         Route::get('/bank-account',[BankAccountController::class,'index'])->name('user.bank');
 
-Route::post('/bank-account',[BankAccountController::class,'store'])->name('user.bank.store');
+        Route::post('/bank-account',[BankAccountController::class,'store'])->name('user.bank.store');
 
-Route::get('/withdraw',[WithdrawController::class,'index'])->name('user.withdraw');
+        Route::get('/withdraw',[WithdrawController::class,'index'])->name('user.withdraw');
 
-Route::post('/withdraw',[WithdrawController::class,'requestWithdraw'])->name('user.withdraw.request');
+        Route::post('/withdraw',[WithdrawController::class,'requestWithdraw'])->name('user.withdraw.request');
         
 });
 
@@ -224,7 +229,7 @@ Route::post('/razorpay/webhook', [RazorpayController::class, 'webhook']);
 
 Route::get('/eventsList',[FrontEventController::class,'index'])->name('events.index');
 Route::post('/events/book/{id}',[FrontEventController::class,'book'])->middleware('auth');
-Route::get('/payment-success',[FrontEventController::class,'paymentSuccess'])->name('payment.success');
+// Route::get('/payment-success',[FrontEventController::class,'paymentSuccess'])->name('payment.success');
 Route::get('/my-bookings',[FrontEventController::class,'myBookings'])
     ->middleware('auth')
     ->name('my.bookings');

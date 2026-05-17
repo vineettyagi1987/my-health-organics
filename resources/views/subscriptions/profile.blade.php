@@ -50,8 +50,8 @@
         <div class="card p-4">
             <h4 class="text-success">Active Membership</h4>
 
-            <p><strong>Start:</strong> {{ $subscription->start_date }}</p>
-            <p><strong>Expiry:</strong> {{ $subscription->end_date }}</p>
+            <p><strong>Start:</strong>  {{ \Carbon\Carbon::createFromTimestamp($subscriptions['current_start'])->format('d M Y h:i A') }}</p>
+            <p><strong>Expiry:</strong>  {{ \Carbon\Carbon::createFromTimestamp($subscriptions['current_end'])->format('d M Y h:i A') }}</p>
 
             <form method="POST" action="{{ route('subscription.cancel', $subscription->id) }}">
                 @csrf

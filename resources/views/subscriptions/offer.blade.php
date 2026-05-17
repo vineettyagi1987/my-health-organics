@@ -1,24 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5 text-center">
 
-    <h2 class="mb-3">Become a Premium Member</h2>
-    <p class="text-muted">Pay ₹500 for 2-years membership benefits.</p>
+<div class="container mt-5">
 
-    <form method="POST" action="{{ route('membership.subscribe') }}">
-        @csrf
-        <button class="btn btn-success btn-lg">
-            Pay ₹500 & Activate Membership
-        </button>
-    </form>
+    <div class="card p-4 text-center">
 
-    <form method="POST" action="{{ route('membership.skip') }}" class="mt-3">
-        @csrf
-        <button class="btn btn-outline-secondary">
-            Skip for now
-        </button>
-    </form>
+        <h2>Membership Offer</h2>
+
+        <h3 class="mt-3">Pay ₹500 for 2-years membership benefits.</h3>
+
+        <p>
+            Become a member volunteer and get your ID Card.
+        </p>
+
+        <form action="{{ route('membership.subscribe') }}" method="POST">
+
+            @csrf
+
+            <button type="submit" class="btn btn-success">
+                Continue Payment
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
+
 @endsection

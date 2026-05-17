@@ -155,17 +155,22 @@ class RazorpayController extends Controller
             /** ================= SUBSCRIPTION COMPLETED ================= */
             case 'subscription.completed':
 
-                // $sub = $data['payload']['subscription']['entity'];
+                $sub = $data['payload']['subscription']['entity'];
 
-                // $endAt = isset($sub['ended_at'])
-                //     ? Carbon::createFromTimestamp($sub['ended_at'])
-                //     : now();
+                // ✅ Start Date from Razorpay
+                $startAt = isset($sub['start_at'])
+                    ? Carbon::createFromTimestamp($sub['start_at'])
+                    : now();
 
-                // Subscription::where('razorpay_subscription_id', $sub['id'])
-                //     ->update([
-                //         'status'   => 'completed',
-                //         'end_date' => $endAt,
-                //     ]);
+                // ✅ ALWAYS calculate end date yourself (2 YEARS)
+                $endAt = $startAt->copy()->addYears(2);
+
+                Subscription::where('razorpay_subscription_id', $sub['id'])
+                    ->update([
+                        'status'   => 'completed',
+                         'start_date' => $startAt,
+                        'end_date'   => $endAt,
+                    ]);
 
                 break;
 
